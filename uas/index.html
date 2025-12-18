@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Login PBO - LocalStorage</title>
+    <title>Aplikasi Login PBO - Local Storage</title>
     <style>
         * {
             margin: 0;
@@ -29,49 +29,54 @@
             max-width: 400px;
         }
         
-        .login-form, .dashboard {
+        .dashboard {
             text-align: center;
+            display: none;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
         
         h1 {
             color: #333;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             font-size: 1.8rem;
         }
         
         .form-group {
-            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
         
         label {
-            display: block;
-            margin-bottom: 0.5rem;
+            font-weight: 600;
             color: #555;
-            font-weight: 500;
         }
         
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
+        input {
+            padding: 0.8rem 1rem;
+            border: 2px solid #e1e5e9;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1rem;
             transition: border-color 0.3s;
         }
         
-        input[type="text"]:focus, input[type="password"]:focus {
+        input:focus {
             outline: none;
             border-color: #667eea;
         }
         
         .btn {
-            width: 100%;
-            padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            padding: 0.8rem 2rem;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s;
@@ -82,131 +87,222 @@
         }
         
         .user-info {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-top: 1rem;
+            background: #f8f9ff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 4px solid #667eea;
         }
         
-        .user-role {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+        .role-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
         }
+        
+        .role-user { background: #d4edda; color: #155724; }
+        .role-admin { background: #f8d7da; color: #721c24; }
+        .role-guest { background: #fff3cd; color: #856404; }
         
         .logout-btn {
-            background: #ff6b6b;
+            background: #6c757d;
             margin-top: 1rem;
-            padding: 10px 20px;
-            width: auto;
-            display: inline-block;
         }
         
-        .hidden {
+        .error {
+            color: #dc3545;
+            font-size: 0.9rem;
             display: none;
-        }
-        
-        .alert {
-            padding: 10px;
-            margin: 1rem 0;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        
-        .alert-error {
-            background: #ff6b6b;
-            color: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Login Form -->
-        <div id="loginSection" class="login-form">
+        <div id="loginSection">
             <h1>🔐 Login Sistem</h1>
-            <div id="alertContainer"></div>
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" placeholder="Masukkan username">
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" placeholder="Masukkan password">
-            </div>
-            <button class="btn" onclick="loginManager.login()">Masuk</button>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                User: moreno / 123 | Admin: admin / admin | Guest: guest / guest
-            </p>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn">Masuk</button>
+                <div class="error" id="errorMsg">Username atau password salah!</div>
+            </form>
         </div>
 
         <!-- Dashboard -->
-        <div id="dashboardSection" class="dashboard hidden">
-            <h1>🎉 Selamat Datang!</h1>
+        <div id="dashboard" class="dashboard">
+            <h1>Selamat Datang!</h1>
             <div id="userInfo" class="user-info">
-                <div id="userRole" class="user-role"></div>
-                <div id="userName"></div>
-                <div id="loginTime"></div>
+                <h2 id="userName"></h2>
+                <div id="userRole" class="role-badge"></div>
+                <p id="loginTime"></p>
             </div>
-            <button class="btn logout-btn" onclick="loginManager.logout()">Keluar</button>
+            <div id="rolePermissions"></div>
+            <button id="logoutBtn" class="btn logout-btn">Logout</button>
         </div>
     </div>
 
     <script>
-        // Class User - Representasi data user
-        class User {
-            constructor(username, password, role, fullName) {
-                this.username = username;
-                this.password = password;
-                this.role = role;
-                this.fullName = fullName;
+        // Database Users menggunakan JSON
+        class UserDatabase {
+            constructor() {
+                this.dbKey = 'users_db';
+                this.initUsers();
+            }
+            
+            initUsers() {
+                const defaultUsers = [
+                    { id: 1, username: 'moreno', password: '123', role: 'user', name: 'Moreno', permissions: ['read', 'write'] },
+                    { id: 2, username: 'admin', password: 'admin', role: 'admin', name: 'Administrator', permissions: ['read', 'write', 'delete', 'manage'] },
+                    { id: 3, username: 'guest', password: 'guest', role: 'guest', name: 'Guest User', permissions: ['read'] }
+                ];
+                
+                if (!localStorage.getItem(this.dbKey)) {
+                    localStorage.setItem(this.dbKey, JSON.stringify(defaultUsers));
+                }
+            }
+            
+            getUsers() {
+                return JSON.parse(localStorage.getItem(this.dbKey) || '[]');
+            }
+            
+            findUser(username, password) {
+                const users = this.getUsers();
+                return users.find(user => 
+                    user.username === username && user.password === password
+                );
             }
         }
-
-        // Class LoginManager - Mengelola login/logout dan localStorage
+        
+        // Class User (PBO)
+        class User {
+            constructor(data) {
+                this.id = data.id;
+                this.username = data.username;
+                this.role = data.role;
+                this.name = data.name;
+                this.permissions = data.permissions;
+                this.loginTime = new Date().toLocaleString('id-ID');
+            }
+            
+            getRoleBadgeClass() {
+                const classes = {
+                    'user': 'role-user',
+                    'admin': 'role-admin',
+                    'guest': 'role-guest'
+                };
+                return classes[this.role] || 'role-guest';
+            }
+            
+            getPermissionsText() {
+                const perms = {
+                    'user': '📖 Baca | ✏️ Tulis',
+                    'admin': '📖 Baca | ✏️ Tulis | 🗑️ Hapus | ⚙️ Kelola Sistem',
+                    'guest': '📖 Baca Saja'
+                };
+                return perms[this.role] || 'Tidak diketahui';
+            }
+        }
+        
+        // Login Manager (PBO)
         class LoginManager {
             constructor() {
-                this.initDatabase();
+                this.userDb = new UserDatabase();
                 this.currentUser = null;
-                this.loadCurrentSession();
+                this.init();
             }
-
-            // Inisialisasi database dengan user default
-            initDatabase() {
-                const defaultUsers = [
-                    new User('moreno', '123', 'User', 'Moreno Santoso'),
-                    new User('admin', 'admin', 'Admin', 'Administrator Sistem'),
-                    new User('guest', 'guest', 'Guest', 'Pengunjung Tamu')
-                ];
-
-                if (!localStorage.getItem('users')) {
-                    localStorage.setItem('users', JSON.stringify(defaultUsers));
-                }
+            
+            init() {
+                this.bindEvents();
+                this.checkSession();
             }
-
-            // Load session user yang sedang login
-            loadCurrentSession() {
-                const session = localStorage.getItem('currentSession');
-                if (session) {
-                    this.currentUser = JSON.parse(session);
-                    this.showDashboard();
-                }
+            
+            bindEvents() {
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+                
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    this.logout();
+                });
             }
-
-            // Validasi login
-            login() {
-                const username = document.getElementById('username').value.trim();
+            
+            async handleLogin() {
+                const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
-
-                if (!username || !password) {
-                    this.showAlert('Username dan password harus diisi!', 'error');
-                    return;
+                
+                const userData = this.userDb.findUser(username, password);
+                
+                if (userData) {
+                    this.currentUser = new User(userData);
+                    this.saveSession();
+                    this.showDashboard();
+                } else {
+                    this.showError();
                 }
-
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.username === username && u.password === password);
-
-                if (user) {
-                    this.currentUser = user;
-                    localStorage.setItem('currentSession', JSON.stringify(user));
-                    this.showDashboard
+            }
+            
+            saveSession() {
+                localStorage.setItem('current_session', JSON.stringify({
+                    userId: this.currentUser.id,
+                    loginTime: this.currentUser.loginTime
+                }));
+            }
+            
+            checkSession() {
+                const session = localStorage.getItem('current_session');
+                if (session) {
+                    const sessionData = JSON.parse(session);
+                    const userData = this.userDb.getUsers().find(u => u.id === sessionData.userId);
+                    if (userData) {
+                        this.currentUser = new User(userData);
+                        this.showDashboard();
+                    }
+                }
+            }
+            
+            showDashboard() {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                
+                document.getElementById('userName').textContent = this.currentUser.name;
+                document.getElementById('userRole').textContent = this.currentUser.role.toUpperCase();
+                document.getElementById('userRole').className = `role-badge ${this.currentUser.getRoleBadgeClass()}`;
+                document.getElementById('loginTime').textContent = `Login: ${this.currentUser.loginTime}`;
+                document.getElementById('rolePermissions').innerHTML = 
+                    `<strong>Hak Akses:</strong> ${this.currentUser.getPermissionsText()}`;
+            }
+            
+            showError() {
+                document.getElementById('errorMsg').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('errorMsg').style.display = 'none';
+                }, 3000);
+            }
+            
+            logout() {
+                this.currentUser = null;
+                localStorage.removeItem('current_session');
+                document.getElementById('dashboard').style.display = 'none';
+                document.getElementById('loginSection').style.display = 'block';
+                document.getElementById('loginForm').reset();
+            }
+        }
+        
+        // Initialize aplikasi
+        document.addEventListener('DOMContentLoaded', () => {
+            new LoginManager();
+        });
+    </script>
+</body>
+</html>
