@@ -1,1 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Login PBO - LocalStorage</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #5c67f2; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #4a54e1; }
+        .hidden { display: none; }
+        .user-info { border-top: 2px solid #eee; margin-top: 20px; padding-top: 20px; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; color: white; margin-top: 5px; }
+        .admin { background-color: #e74c3c; }
+        .user { background-color: #3498db; }
+        .guest { background-color: #95a5a6; }
+    </style>
+</head>
+<body>
 
+    <div class="container" id="login-card">
+        <h2>PBO Login System</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="app.handleLogin()">Login</button>
+        <p style="font-size: 0.8rem; color: #666;">Hint: admin/admin, user/user, guest/guest</p>
+    </div>
+
+    <div class="container hidden" id="dashboard-card">
+        <h2 id="welcome-text">Hai, User!</h2>
+        <div class="user-info">
+            <p><strong>Status Login:</strong> Berhasil</p>
+            <p><strong>Role Anda:</strong> <span id="role-badge" class="badge"></span></p>
+            <p id="special-message"></p>
+        </div>
+        <button onclick="app.handleLogout()" style="background-color: #666; margin-top: 20px;">Logout</button>
+    </div>
+
+    <script>
+        // --- KONSEP PBO: Class Model ---
+        
+        class User {
+            constructor(username, password, role) {
+                this.username = username;
+                this.password = password;
+                this.role = role;
+            }
+
+            getPermissions() {
+                return "Akses standar dashboard.";
+            }
+        }
+
+        // Inheritance (Pewarisan)
+        class Admin extends User {
+            getPermissions() {
+                return "Akses penuh sistem: Kelola database & user.";
+            }
+        }
+
+        // --- KONSEP PBO: Controller/Engine ---
+
+        class AuthSystem {
+            constructor() {
+                this.users = [];
+                this.initDatabase();
+            }
+
+            // Inisialisasi Database JSON ke LocalStorage
+            initDatabase() {
+                const savedData = localStorage.getItem('pbo_users');
+                if (!savedData) {
+                    // Data awal jika localStorage kosong
+                    const initialUsers = [
+                        new Admin('admin', 'admin', 'Administrator'),
+                        new User('user', 'user', 'Reguler User'),
+                        new User('guest', 'guest', 'Guest')
+                    ];
+                    localStorage.setItem('pbo_users', JSON.stringify(initialUsers));
+                    this.users = initialUsers;
+                } else {
+                    this.users = JSON.parse(savedData);
+                }
+            }
+
+            login(username, password) {
+                const user = this.users.find(u => u.username === username && u.password === password);
+                if (user) {
+                    // Kembalikan objek sesuai class-nya (Re-instantiation)
+                    return user.role === 'Administrator' ? new Admin(user.username, user.password, user.role) : new User(user.username, user.password, user.role);
+                }
+                return null;
+            }
+        }
+
+        // --- Logika Aplikasi (DOM Manipulation) ---
+
+        const auth = new AuthSystem();
+        
+        const app = {
+            handleLogin: () => {
+                const userInp = document.getElementById('username').value;
+                const passInp = document.getElementById('password').value;
+
+                const sessionUser = auth.login(userInp, passInp);
+
+                if (sessionUser) {
+                    app.showDashboard(sessionUser);
+                } else {
+                    alert("Gagal Login! Username atau password salah.");
+                }
+            },
+
+            showDashboard: (user) => {
+                document.getElementById('login-card').classList.add('hidden');
+                document.getElementById('dashboard-card').classList.remove('hidden');
+                
+                document.getElementById('welcome-text').innerText = `Hai, ${user.username}!`;
+                
+                const badge = document.getElementById('role-badge');
+                badge.innerText = user.role;
+                badge.className = `badge ${user.username.toLowerCase()}`; // Style berdasarkan role
+                
+                document.getElementById('special-message').innerText = user.getPermissions();
+            },
+
+            handleLogout: () => {
+                location.reload(); // Reset state aplikasi
+            }
+        };
+    </script>
+</body>
+</html>
