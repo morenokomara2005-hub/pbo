@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -19,51 +19,48 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .container {
             background: white;
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
         }
-        
-        .login-form, .user-dashboard {
-            text-align: center;
-        }
-        
+
         h1 {
+            text-align: center;
             color: #333;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             font-size: 1.8rem;
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         label {
             display: block;
             margin-bottom: 0.5rem;
             color: #555;
             font-weight: 500;
         }
-        
-        input[type="text"], input[type="password"] {
+
+        input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ddd;
+            border: 2px solid #e1e5e9;
             border-radius: 8px;
             font-size: 1rem;
             transition: border-color 0.3s;
         }
-        
-        input[type="text"]:focus, input[type="password"]:focus {
+
+        input:focus {
             outline: none;
             border-color: #667eea;
         }
-        
+
         button {
             width: 100%;
             padding: 12px;
@@ -71,61 +68,208 @@
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s;
         }
-        
+
         button:hover {
             transform: translateY(-2px);
         }
-        
+
+        .user-dashboard {
+            text-align: center;
+            display: none;
+        }
+
         .user-info {
             background: #f8f9ff;
             padding: 2rem;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-top: 1rem;
         }
-        
+
         .greeting {
             font-size: 1.5rem;
             color: #333;
             margin-bottom: 1rem;
         }
-        
+
         .role-badge {
             display: inline-block;
             padding: 0.5rem 1rem;
-            background: #667eea;
-            color: white;
             border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: bold;
+            margin-top: 1rem;
         }
-        
+
+        .admin { background: #ff6b6b; color: white; }
+        .user { background: #4ecdc4; color: white; }
+        .guest { background: #95a5a6; color: white; }
+
         .logout-btn {
-            background: #ff6b6b;
+            background: #95a5a6;
             margin-top: 1.5rem;
             padding: 10px;
-            font-size: 0.9rem;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .users-list {
-            background: #f0f0f0;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            text-align: left;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Login Form -->
-        <div id="loginSection" class="login-form">
+        <div id="loginForm">
+            <h1>🔐 Login Sistem</h1>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Masukkan username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Masukkan password">
+            </div>
+            <button onclick="loginManager.attemptLogin()">Login</button>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                User: moreno | Admin: admin | Guest: guest
+            </p>
+        </div>
+
+        <!-- User Dashboard -->
+        <div id="userDashboard" class="user-dashboard">
+            <h1>✅ Selamat Datang!</h1>
+            <div class="user-info">
+                <div class="greeting" id="greeting">Hai, <span id="currentUser"></span>!</div>
+                <div id="roleBadge" class="role-badge"></div>
+            </div>
+            <button class="logout-btn" onclick="loginManager.logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // === CLASS PEMROGRAMAN BERORIENTASI OBJEK ===
+        
+        class User {
+            constructor(username, password, role) {
+                this.username = username;
+                this.password = password;
+                this.role = role;
+            }
+
+            getRoleColor() {
+                const colors = {
+                    'admin': 'admin',
+                    'user': 'user',
+                    'guest': 'guest'
+                };
+                return colors[this.role] || 'guest';
+            }
+
+            getRoleDisplay() {
+                const displays = {
+                    'admin': 'Admin',
+                    'user': 'User',
+                    'guest': 'Guest'
+                };
+                return displays[this.role] || 'Guest';
+            }
+        }
+
+        class LoginManager {
+            constructor() {
+                this.currentUser = null;
+                this.usersDB = this.loadUsers();
+                this.init();
+            }
+
+            // Load users dari LocalStorage
+            loadUsers() {
+                const saved = localStorage.getItem('usersDB');
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+                // Default users
+                const defaultUsers = [
+                    new User('moreno', '123', 'user'),
+                    new User('admin', 'admin', 'admin'),
+                    new User('guest', 'guest', 'guest')
+                ];
+                this.saveUsers(defaultUsers);
+                return defaultUsers;
+            }
+
+            saveUsers(users) {
+                localStorage.setItem('usersDB', JSON.stringify(users));
+            }
+
+            init() {
+                // Cek apakah sudah login
+                const savedUser = localStorage.getItem('currentUser');
+                if (savedUser) {
+                    this.currentUser = JSON.parse(savedUser);
+                    this.showDashboard();
+                }
+            }
+
+            attemptLogin() {
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+
+                if (!username || !password) {
+                    alert('❌ Username dan password harus diisi!');
+                    return;
+                }
+
+                // Cari user di database
+                const user = this.usersDB.find(u => 
+                    u.username === username && u.password === password
+                );
+
+                if (user) {
+                    this.currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    this.showDashboard();
+                } else {
+                    alert('❌ Login gagal! Username atau password salah.');
+                    // Clear form
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                }
+            }
+
+            showDashboard() {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('userDashboard').style.display = 'block';
+                
+                document.getElementById('currentUser').textContent = 
+                    this.currentUser.username;
+                document.getElementById('greeting').textContent = 
+                    `Hai, ${this.currentUser.username}!`;
+                
+                const roleBadge = document.getElementById('roleBadge');
+                roleBadge.textContent = this.currentUser.getRoleDisplay();
+                roleBadge.className = `role-badge ${this.currentUser.getRoleColor()}`;
+            }
+
+            logout() {
+                this.currentUser = null;
+                localStorage.removeItem('currentUser');
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('userDashboard').style.display = 'none';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        // Inisialisasi aplikasi
+        const loginManager = new LoginManager();
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loginManager.attemptLogin();
+            }
+        });
+    </script>
+</body>
+</html>
