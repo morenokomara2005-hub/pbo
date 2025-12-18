@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
         }
-
+        
         .container {
             background: white;
             padding: 2rem;
@@ -28,39 +28,42 @@
             width: 100%;
             max-width: 400px;
         }
-
-        h1 {
+        
+        .login-form, .dashboard {
             text-align: center;
+        }
+        
+        h1 {
             color: #333;
             margin-bottom: 2rem;
             font-size: 1.8rem;
         }
-
+        
         .form-group {
             margin-bottom: 1.5rem;
         }
-
+        
         label {
             display: block;
             margin-bottom: 0.5rem;
             color: #555;
             font-weight: 500;
         }
-
+        
         input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e1e5e9;
+            border: 2px solid #ddd;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 16px;
             transition: border-color 0.3s;
         }
-
+        
         input:focus {
             outline: none;
             border-color: #667eea;
         }
-
+        
         button {
             width: 100%;
             padding: 12px;
@@ -68,58 +71,51 @@
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 1.1rem;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s;
         }
-
+        
         button:hover {
             transform: translateY(-2px);
         }
-
-        .user-dashboard {
-            text-align: center;
-            display: none;
-        }
-
+        
         .user-info {
             background: #f8f9ff;
             padding: 2rem;
-            border-radius: 12px;
+            border-radius: 10px;
             margin-top: 1rem;
         }
-
-        .greeting {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
+        
         .role-badge {
             display: inline-block;
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-weight: bold;
-            margin-top: 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
-
-        .admin { background: #ff6b6b; color: white; }
-        .user { background: #4ecdc4; color: white; }
-        .guest { background: #95a5a6; color: white; }
-
+        
+        .role-user { background: #e3f2fd; color: #1976d2; }
+        .role-admin { background: #fff3e0; color: #f57c00; }
+        .role-guest { background: #f3e5f5; color: #7b1fa2; }
+        
         .logout-btn {
-            background: #95a5a6;
+            background: #ff6b6b;
             margin-top: 1.5rem;
             padding: 10px;
-            font-size: 1rem;
+        }
+        
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Login Form -->
-        <div id="loginForm">
+        <div id="loginForm" class="login-form">
             <h1>🔐 Login Sistem</h1>
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -129,147 +125,170 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" placeholder="Masukkan password">
             </div>
-            <button onclick="loginManager.attemptLogin()">Login</button>
-            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                User: moreno | Admin: admin | Guest: guest
+            <button onclick="handleLogin()">Login</button>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                User: moreno / 123 | Admin: admin / admin | Guest: guest / guest
             </p>
         </div>
 
-        <!-- User Dashboard -->
-        <div id="userDashboard" class="user-dashboard">
-            <h1>✅ Selamat Datang!</h1>
-            <div class="user-info">
-                <div class="greeting" id="greeting">Hai, <span id="currentUser"></span>!</div>
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard hidden">
+            <h1>🎉 Selamat Datang!</h1>
+            <div id="userInfo" class="user-info">
                 <div id="roleBadge" class="role-badge"></div>
+                <h2 id="userName"></h2>
+                <p id="loginTime"></p>
+                <p id="sessionInfo"></p>
             </div>
-            <button class="logout-btn" onclick="loginManager.logout()">Logout</button>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </div>
 
     <script>
-        // === CLASS PEMROGRAMAN BERORIENTASI OBJEK ===
-        
+        // Class User untuk PBO
         class User {
-            constructor(username, password, role) {
+            constructor(username, password, role, privileges = []) {
                 this.username = username;
                 this.password = password;
                 this.role = role;
+                this.privileges = privileges;
+                this.loginTime = null;
             }
-
-            getRoleColor() {
-                const colors = {
-                    'admin': 'admin',
-                    'user': 'user',
-                    'guest': 'guest'
-                };
-                return colors[this.role] || 'guest';
+            
+            // Method untuk login
+            login() {
+                this.loginTime = new Date().toLocaleString('id-ID');
+                localStorage.setItem('currentUser', JSON.stringify(this));
+                this.saveToDatabase();
             }
-
-            getRoleDisplay() {
-                const displays = {
-                    'admin': 'Admin',
-                    'user': 'User',
-                    'guest': 'Guest'
-                };
-                return displays[this.role] || 'Guest';
+            
+            // Method untuk simpan ke localStorage database
+            saveToDatabase() {
+                const db = this.getDatabase();
+                db[this.username] = this;
+                localStorage.setItem('userDatabase', JSON.stringify(db));
             }
-        }
-
-        class LoginManager {
-            constructor() {
-                this.currentUser = null;
-                this.usersDB = this.loadUsers();
-                this.init();
+            
+            // Method untuk ambil database
+            static getDatabase() {
+                const db = localStorage.getItem('userDatabase');
+                return db ? JSON.parse(db) : {};
             }
-
-            // Load users dari LocalStorage
-            loadUsers() {
-                const saved = localStorage.getItem('usersDB');
-                if (saved) {
-                    return JSON.parse(saved);
-                }
-                // Default users
-                const defaultUsers = [
-                    new User('moreno', '123', 'user'),
-                    new User('admin', 'admin', 'admin'),
-                    new User('guest', 'guest', 'guest')
-                ];
-                this.saveUsers(defaultUsers);
-                return defaultUsers;
-            }
-
-            saveUsers(users) {
-                localStorage.setItem('usersDB', JSON.stringify(users));
-            }
-
-            init() {
-                // Cek apakah sudah login
-                const savedUser = localStorage.getItem('currentUser');
-                if (savedUser) {
-                    this.currentUser = JSON.parse(savedUser);
-                    this.showDashboard();
-                }
-            }
-
-            attemptLogin() {
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value;
-
-                if (!username || !password) {
-                    alert('❌ Username dan password harus diisi!');
-                    return;
-                }
-
-                // Cari user di database
-                const user = this.usersDB.find(u => 
-                    u.username === username && u.password === password
-                );
-
-                if (user) {
-                    this.currentUser = user;
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    this.showDashboard();
-                } else {
-                    alert('❌ Login gagal! Username atau password salah.');
-                    // Clear form
-                    document.getElementById('username').value = '';
-                    document.getElementById('password').value = '';
-                }
-            }
-
-            showDashboard() {
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('userDashboard').style.display = 'block';
+            
+            // Method untuk validasi login
+            static validateLogin(username, password) {
+                const db = this.getDatabase();
+                const userData = db[username];
                 
-                document.getElementById('currentUser').textContent = 
-                    this.currentUser.username;
-                document.getElementById('greeting').textContent = 
-                    `Hai, ${this.currentUser.username}!`;
-                
-                const roleBadge = document.getElementById('roleBadge');
-                roleBadge.textContent = this.currentUser.getRoleDisplay();
-                roleBadge.className = `role-badge ${this.currentUser.getRoleColor()}`;
+                if (userData && userData.password === password) {
+                    const user = new User(
+                        userData.username,
+                        userData.password,
+                        userData.role,
+                        userData.privileges
+                    );
+                    user.login();
+                    return user;
+                }
+                return null;
             }
-
-            logout() {
-                this.currentUser = null;
+            
+            // Method untuk dapatkan user saat ini
+            static getCurrentUser() {
+                const currentUser = localStorage.getItem('currentUser');
+                return currentUser ? JSON.parse(currentUser) : null;
+            }
+            
+            // Method untuk logout
+            static logout() {
                 localStorage.removeItem('currentUser');
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('userDashboard').style.display = 'none';
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
             }
         }
 
-        // Inisialisasi aplikasi
-        const loginManager = new LoginManager();
+        // Inisialisasi database dengan user default
+        function initializeDatabase() {
+            if (!localStorage.getItem('userDatabase')) {
+                const defaultUsers = {
+                    'moreno': new User('moreno', '123', 'User', ['read', 'write']),
+                    'admin': new User('admin', 'admin', 'Admin', ['read', 'write', 'delete', 'manage']),
+                    'guest': new User('guest', 'guest', 'Guest', ['read'])
+                };
+                
+                const userDb = {};
+                Object.keys(defaultUsers).forEach(key => {
+                    userDb[key] = defaultUsers[key];
+                });
+                
+                localStorage.setItem('userDatabase', JSON.stringify(userDb));
+            }
+        }
 
-        // Enter key support
+        // Event listener untuk Enter key
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                loginManager.attemptLogin();
+                handleLogin();
             }
         });
+
+        // Fungsi handle login
+        function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                alert('❌ Username dan password harus diisi!');
+                return;
+            }
+            
+            const user = User.validateLogin(username, password);
+            
+            if (user) {
+                showDashboard(user);
+            } else {
+                alert('❌ Login gagal! Username atau password salah.');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        }
+
+        // Fungsi tampilkan dashboard
+        function showDashboard(user) {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            
+            // Update info user
+            document.getElementById('userName').textContent = user.username.toUpperCase();
+            
+            const roleBadge = document.getElementById('roleBadge');
+            roleBadge.textContent = `Role: ${user.role}`;
+            roleBadge.className = `role-badge role-${user.role.toLowerCase()}`;
+            
+            document.getElementById('loginTime').textContent = `Login: ${user.loginTime}`;
+            document.getElementById('sessionInfo').textContent = `Privileges: ${user.privileges.join(', ')}`;
+        }
+
+        // Fungsi logout
+        function handleLogout() {
+            User.logout();
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('username').focus();
+        }
+
+        // Inisialisasi saat halaman dimuat
+        window.onload = function() {
+            initializeDatabase();
+            
+            // Cek apakah sudah login
+            const currentUser = User.getCurrentUser();
+            if (currentUser) {
+                showDashboard(currentUser);
+            } else {
+                document.getElementById('username').focus();
+            }
+        };
     </script>
 </body>
 </html>
