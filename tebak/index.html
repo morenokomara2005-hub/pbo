@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>😂 Game Tebak-Tebakan Lucu</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 60px; height: 60px; left: 20%; animation-delay: 1s; }
+        .shape:nth-child(3) { width: 100px; height: 100px; left: 80%; animation-delay: 2s; }
+        .shape:nth-child(4) { width: 40px; height: 40px; left: 90%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .game-container {
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.5);
+            z-index: 10;
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .score {
+            background: linear-gradient(45deg, #ff9ff3, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .question-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px 0;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .answer-btn {
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #ffecd2 0%, #fcb69f 100%);
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .answer-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .answer-btn.correct {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            animation: correctAnim 0.6s ease;
+        }
+
+        .answer-btn.wrong {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            animation: wrongAnim 0.6s ease;
+        }
+
+        @keyframes correctAnim {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wrongAnim {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        .control-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .game-over {
+            display: none;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 40px;
+            border-radius: 25px;
+            margin-top: 20px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .answers { grid-template-columns: 1fr; }
+            h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="game-container" id="gameContainer">
+        <h1>😂 Tebak-Tebakan Lucu</h1>
+        <div class="score-board">
+            <span class="score">Skor: <span id="score">0</span></span>
+            <span>Soal: <span id="questionNum">1</span>/50</span>
+        </div>
+        
+        <div class="question-container" id="question">
+            Tekan "Mulai Game" untuk bermain!
+        </div>
+
+        <div class="answers" id="answers" style="display: none;">
+            <!-- Jawaban akan di-generate oleh JS -->
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button class="control-btn" onclick="game.startGame()">🎮 Mulai Game</button>
+            <button class="control-btn" onclick="game.nextQuestion()" id="nextBtn" style="display: none;">➡️ Soal Berikutnya</button>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <h2>🎉 Selamat! Game Selesai!</h2>
+            <p>Skor Akhir: <span id="finalScore" style="font-size: 2em; color: #ff6b6b; font-weight: 700;">0</span></p>
+            <button class="control-btn" onclick="game.restartGame()">🔄 Main Lagi</button>
+        </div>
+    </div>
+
+    <script>
+        // PBO Implementation - Class SnakeGame
+        class TebakTebakanGame {
+            constructor() {
+                this.questions = this.generateQuestions();
+                this.currentQuestion = 0;
+                this.score = 0;
+                this.gameActive = false;
+                this.questionElement = document.getElementById('question');
+                this.answersElement = document.getElementById('answers');
+                this.scoreElement = document.getElementById('score');
+                this.questionNumElement = document.getElementById('questionNum');
+                this.nextBtn = document.getElementById('nextBtn');
+                this.gameOverElement = document.getElementById('gameOver');
+                this.finalScoreElement = document.getElementById('finalScore');
+            }
+
+            // Method untuk generate 50 tebak-tebakan
+            generateQuestions() {
+                return [
+                    { q: "Sayuran yang paling susah dilupain?", a: ["Wortel", "Bayam", "Kolplay", "Buncis"], correct: 2 },
+                    { q: " Hewan yang paling susah dilupain?", a: ["Gajah", "Kamera", "Ubur-ubur", "Kucing"], correct: 1 },
+                    { q: "Buah yang paling susah dilupain?", a: ["Jeruk", "Melon", "Apel", "Semangka"], correct: 1 },
+                    { q: "Jaman sekarang susah dilupain apa?", a: ["Kenangan", "Notif", "Pacar", "Teman"], correct: 1 },
+                    { q: "Nenek lagi pamer cucunya yang baru lahir, bilang cucunya mirip dia. Emangnya bayi itu mirip neneknya dari mana?", a: ["Muka", "Tangan", "Keriput", "Gigi"], correct: 2 },
+                    { q: "Kamera lagi rusak. Kamu harus benerin gimana?", a: ["Ganti lensa", "Format", "Kamera kan cuma butuh 1 cameramen", "Restart"], correct: 2 },
+                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Bayam", "Buncis", "Tomat", "Wortel"], correct: 1 },
+                    { q: "Kalau kamu punya 3 apel, terus apelnya dimakan temenmu. Berapa apel yang tersisa?", a: ["0", "1", "2", "3"], correct: 3 },
+                    { q: "Burung yg paling susah dilupain?", a: ["Elang", "Merpati", "Kutilang", "Kamera"], correct: 3 },
+                    { q: "Kenapa orang takut sama hantu ?", a: ["Takut dimakan", "Takut dicium", "Takut diganggu", "Takut keliatan"], correct: 3 },
+                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Bayam", "Wortel", "Kangkung"], correct: 1 },
+                    { q: "Kalau ada 5 ekor ikan di akuarium, terus akuariumnya pecah. Berapa yang selamat?", a: ["0", "1", "Semua", "4"], correct: 2 },
+                    { q: " Hewan apa yang paling susah dilupain?", a: ["Gajah", "Ubur-ubur", "Kamera", "Kucing"], correct: 2 },
+                    { q: "Kamera lagi rusak. Gimana cara benerinnya?", a: ["Ganti baterai", "Format", "Cuma butuh 1 cameramen", "Restart"], correct: 2 },
+                    { q: "Buah yang paling susah dilupain?", a: ["Jeruk", "Melon-colak", "Apel", "Pisang"], correct: 1 },
+                    { q: "Jaman sekarang susah dilupain apa?", a: ["Kenangan lama", "Notif HP", "Pacar", "Ujian"], correct: 1 },
+                    { q: "Nenek lagi pamer cucunya yang baru lahir, bilang mirip dia. Mirip dari mana?", a: ["Muka", "Telinga", "Keriput", "Rambut"], correct: 2 },
+                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Bayam", "Tomat", "Bawang"], correct: 0 },
+                    { q: "Kalau kamu punya 3 apel, dimakan temenmu 1. Berapa apel tersisa?", a: ["2", "1", "3", "0"], correct: 2 },
+                    { q: "Burung apa yang paling susah dilupain?", a: ["Burung lovebird", "Kakatua", "Kutilang", "Kamera"], correct: 3 },
+                    { q: "Kenapa orang takut sama hantu?", a: ["Takut dicium", "Takut dimakan", "Takut diganggu", "Takut keliatan"], correct: 3 },
+                    { q: "Ikan apa yang paling susah dilupain?", a: ["Nemo", "Ikan pari", "Ikan kamera", "Ikan mas"], correct: 2 },
+                    { q: "Kalau ada 10 kucing di kandang, pintunya dibuka. Berapa yang keluar?", a: ["10", "9", "Semua", "Tidak ada"], correct: 3 },
+                    { q: "Baju apa yang paling susah dilupain?", a: ["Baju pengantin", "Baju adat", "Baju kamera", "Baju olahraga"], correct: 2 },
+                    { q: "Kenapa buah apel merah?", a: ["Karena matanya merah", "Karena belum mateng", "Karena malu", "Karena dicubit"], correct: 3 },
+                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Kol", "Bawang", "Bayam"], correct: 0 },
+                    { q: "Kalau ada 4 burung di pohon, 1 jatuh. Berapa yang tersisa?", a: ["3", "4", "0", "Tidak ada"], correct: 3 },
+                    { q: " Hewan apa yang paling susah dilupain?", a: ["Semute", "Kamera", "Semut", "Semir"], correct: 1 },
+                    { q: "Kamera lagi rusak. Harus diganti apa?", a: ["Lensanya", "Baterainya", "Cuma butuh cameramen", "Memorinya"], correct: 2 },
+                    { q: "Buah yang paling susah dilupain?", a: ["Jeruk", "Melon-colak", "Mangga", "Pisang"], correct: 1 },
+                    { q: "Jaman sekarang susah dilupain apa?", a: ["Mantannya", "Notif WA", "Ujian", "Tugas"], correct: 1 },
+                    { q: "Nenek pamer cucu barunya, katanya mirip dia. Mirip dari mana?", a: ["Hidungnya", "Matanya", "Keriputnya", "Giginya"], correct: 2 },
+                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Terong", "Bawang", "Kentang"], correct: 0 },
+                    { q: "Kalau kamu punya 5 permen, dimakan temen 3. Berapa tersisa?", a: ["2", "5", "0", "3"], correct: 1 },
+                    { q: "Burung apa yang paling susah dilupain?", a: ["Merpati", "Kutilang", "Kamera", "Elang"], correct: 2 },
+                    { q: "Kenapa orang takut sama hantu?", a: ["Takut dicium", "Takut kaya", "Takut keliatan", "Takut miskin"], correct: 2 },
+                    { q: "Ikan apa yang paling susah dilupain?", a: ["Ikan lele", "Ikan mas", "Ikan kamera", "Ikan cupang"], correct: 2 },
+                    { q: "Kalau ada 7 ayam di kandang, pintunya dibuka. Berapa keluar?", a: ["7", "6", "Semua", "Tidak ada"], correct: 3 },
+                    { q: "Baju apa yang paling susah dilupain?", a: ["Baju tidur", "Baju kamera", "Baju pesta", "Baju kerja"], correct: 1 },
+                    { q: "Kenapa buah apel merah?", a: ["Karena belum mateng", "Karena malu", "Karena lapar", "Karena dicubit"], correct: 1 },
+                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Wortel", "Bayam", "Kol"], correct: 0 },
+                    { q: "Kalau ada 2 anjing di rumah, 1 lari. Berapa tersisa?", a: ["1", "2", "0", "3"], correct: 1 },
+                    { q: " Hewan apa yang paling susah dilupain?", a: ["Kamera", "Semute", "Semut", "Semir"], correct: 0 },
+                    { q: "Kamera lagi rusak. Solusinya apa?", a: ["Format", "Ganti casing", "Butuh cameramen", "Update software"], correct: 2 },
+                    { q: "Buah yang paling susah dilupain?", a: ["Melon-colak", "Jeruk", "Apel", "Anggur"], correct: 0 },
+                    { q: "Jaman sekarang susah dilupain apa?", a: ["Notif sosmed", "Kenangan", "Pacar lama", "Teman sekolah"], correct: 0 },
+                    { q: "Nenek pamer cucu, katanya mirip. Mirip dari mana?", a: ["Keriputnya", "Matanya", "Tangannya", "Kakinya"], correct: 0 },
+                    { q: "Tebak-tebakan apa yang paling susah dilupain?", a: ["Yang ini", "Yang kemarin", "Yang besok", "Semua"], correct: 0 }
+                ];
+            }
+
+            startGame() {
+                this.currentQuestion = 0;
+                this.score = 0;
+                this.gameActive = true;
+                this.updateDisplay();
+                this.nextBtn.style.display = 'none';
+                document.getElementById('answers').style.display = 'grid';
+                this.showQuestion();
+            }
+
+            showQuestion() {
+                if (this.currentQuestion >= this.questions.length) {
+                    this.endGame();
+                    return;
+                }
+
+                const q = this.questions[this.currentQuestion];
+                this.questionElement.textContent = q.q;
+                this.answersElement.innerHTML = '';
+
+                q.a.forEach((answer, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'answer-btn';
+                    btn.textContent = answer;
+                    btn.onclick = () => this.checkAnswer(index, q.correct);
+                    this.answersElement.appendChild(btn);
+                });
+
+                this.updateDisplay();
+            }
+
+            checkAnswer(selected, correct) {
+                if (!this.gameActive) return;
+
+                const buttons = this.answersElement.querySelectorAll('.answer-btn');
+                
+                buttons.forEach((btn, index) => {
+                    if (index === correct) {
+                        btn.classList.add('correct');
+                    } else if (index === selected && index !== correct) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+
+                if (selected === correct) {
+                    this.score += 10;
+                    this.updateDisplay();
+                }
+
+                this.nextBtn.style.display = 'inline-block';
+                this.gameActive = false;
+            }
+
+            nextQuestion() {
+                this.currentQuestion++;
+                this.gameActive = true;
+                this.nextBtn.style.display = 'none';
+                this.showQuestion();
+            }
+
+            updateDisplay() {
+                this.scoreElement.textContent = this.score;
+                this.questionNumElement.textContent = this.currentQuestion + 1;
+            }
+
+            endGame() {
+                this.gameActive = false;
+                this.finalScoreElement.textContent = this.score;
+                this.gameOverElement.style.display = 'block';
+                document.getElementById('answers').style.display = 'none';
+            }
+
+            restartGame() {
+                this.gameOverElement.style.display = 'none';
+                this.startGame();
+            }
+        }
+
+        // Inisialisasi game (PBO)
+        const game = new TebakTebakanGame();
+    </script>
+</body>
+</html>
