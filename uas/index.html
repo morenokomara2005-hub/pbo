@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -19,290 +19,260 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .container {
             background: white;
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
         }
-        
-        .dashboard {
-            text-align: center;
-            display: none;
-        }
-        
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
+
         h1 {
+            text-align: center;
             color: #333;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
             font-size: 1.8rem;
         }
-        
+
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
-        
+
         label {
-            font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem;
             color: #555;
+            font-weight: 500;
         }
-        
+
         input {
-            padding: 0.8rem 1rem;
-            border: 2px solid #e1e5e9;
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
             transition: border-color 0.3s;
         }
-        
+
         input:focus {
             outline: none;
             border-color: #667eea;
         }
-        
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.8rem 2rem;
+            flex: 1;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
         }
-        
-        .btn:hover {
+
+        .btn-login {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background: #218838;
             transform: translateY(-2px);
         }
-        
-        .user-info {
-            background: #f8f9ff;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            border-left: 4px solid #667eea;
+
+        .btn-cancel {
+            background: white;
+            color: #666;
+            border: 2px solid #ddd;
         }
-        
-        .role-badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin: 0.5rem 0;
+
+        .btn-cancel:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            color: #667eea;
         }
-        
-        .role-user { background: #d4edda; color: #155724; }
-        .role-admin { background: #f8d7da; color: #721c24; }
-        .role-guest { background: #fff3cd; color: #856404; }
-        
-        .logout-btn {
-            background: #6c757d;
-            margin-top: 1rem;
-        }
-        
-        .error {
-            color: #dc3545;
-            font-size: 0.9rem;
+
+        .dashboard {
             display: none;
+            text-align: center;
+        }
+
+        .welcome {
+            font-size: 1.5rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Login Form -->
-        <div id="loginSection">
+        <div id="loginPage">
             <h1>🔐 Login Sistem</h1>
-            <form class="login-form" id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit" class="btn">Masuk</button>
-                <div class="error" id="errorMsg">Username atau password salah!</div>
-            </form>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Masukkan username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Masukkan password">
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-cancel" onclick="cancelLogin()">Cancel</button>
+                <button class="btn btn-login" onclick="loginManager.login()">Login</button>
+            </div>
         </div>
 
         <!-- Dashboard -->
         <div id="dashboard" class="dashboard">
-            <h1>Selamat Datang!</h1>
-            <div id="userInfo" class="user-info">
-                <h2 id="userName"></h2>
-                <div id="userRole" class="role-badge"></div>
-                <p id="loginTime"></p>
-            </div>
-            <div id="rolePermissions"></div>
-            <button id="logoutBtn" class="btn logout-btn">Logout</button>
+            <h1>✅ Dashboard</h1>
+            <div id="welcomeMessage" class="welcome">Hai, User!</div>
+            <p>Selamat datang di sistem PBO dengan Local Storage</p>
+            <br>
+            <button class="logout-btn" onclick="loginManager.logout()">Logout</button>
         </div>
     </div>
 
     <script>
-        // Database Users menggunakan JSON
+        // Class User - Representasi data user sebagai object
+        class User {
+            constructor(username, password, role) {
+                this.username = username;
+                this.password = password;
+                this.role = role;
+            }
+
+            getInfo() {
+                return `Hai, ${this.username}! Role: ${this.role}`;
+            }
+        }
+
+        // Database Users - Object berisi 3 user predefined
         class UserDatabase {
             constructor() {
-                this.dbKey = 'users_db';
-                this.initUsers();
+                this.KEY = 'pbo_users_db';
+                this.initDatabase();
             }
-            
-            initUsers() {
-                const defaultUsers = [
-                    { id: 1, username: 'moreno', password: '123', role: 'user', name: 'Moreno', permissions: ['read', 'write'] },
-                    { id: 2, username: 'admin', password: 'admin', role: 'admin', name: 'Administrator', permissions: ['read', 'write', 'delete', 'manage'] },
-                    { id: 3, username: 'guest', password: 'guest', role: 'guest', name: 'Guest User', permissions: ['read'] }
-                ];
-                
-                if (!localStorage.getItem(this.dbKey)) {
-                    localStorage.setItem(this.dbKey, JSON.stringify(defaultUsers));
+
+            initDatabase() {
+                if (!localStorage.getItem(this.KEY)) {
+                    const users = [
+                        new User('moreno', '123', 'user'),
+                        new User('admin', 'admin', 'admin'),
+                        new User('guest', 'guest', 'guest')
+                    ];
+                    localStorage.setItem(this.KEY, JSON.stringify(users));
                 }
             }
-            
+
             getUsers() {
-                return JSON.parse(localStorage.getItem(this.dbKey) || '[]');
+                const data = localStorage.getItem(this.KEY);
+                return JSON.parse(data || '[]');
             }
-            
+
             findUser(username, password) {
                 const users = this.getUsers();
-                return users.find(user => 
-                    user.username === username && user.password === password
-                );
+                return users.find(u => u.username === username && u.password === password);
             }
         }
-        
-        // Class User (PBO)
-        class User {
-            constructor(data) {
-                this.id = data.id;
-                this.username = data.username;
-                this.role = data.role;
-                this.name = data.name;
-                this.permissions = data.permissions;
-                this.loginTime = new Date().toLocaleString('id-ID');
-            }
-            
-            getRoleBadgeClass() {
-                const classes = {
-                    'user': 'role-user',
-                    'admin': 'role-admin',
-                    'guest': 'role-guest'
-                };
-                return classes[this.role] || 'role-guest';
-            }
-            
-            getPermissionsText() {
-                const perms = {
-                    'user': '📖 Baca | ✏️ Tulis',
-                    'admin': '📖 Baca | ✏️ Tulis | 🗑️ Hapus | ⚙️ Kelola Sistem',
-                    'guest': '📖 Baca Saja'
-                };
-                return perms[this.role] || 'Tidak diketahui';
-            }
-        }
-        
-        // Login Manager (PBO)
+
+        // LoginManager - Controller utama PBO
         class LoginManager {
             constructor() {
-                this.userDb = new UserDatabase();
+                this.db = new UserDatabase();
                 this.currentUser = null;
                 this.init();
             }
-            
+
             init() {
-                this.bindEvents();
-                this.checkSession();
+                // Auto login jika session masih valid
+                const session = localStorage.getItem('pbo_session');
+                if (session) {
+                    const userData = JSON.parse(session);
+                    this.currentUser = new User(userData.username, userData.password, userData.role);
+                    this.showDashboard();
+                }
             }
-            
-            bindEvents() {
-                document.getElementById('loginForm').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handleLogin();
-                });
-                
-                document.getElementById('logoutBtn').addEventListener('click', () => {
-                    this.logout();
-                });
-            }
-            
-            async handleLogin() {
-                const username = document.getElementById('username').value;
+
+            login() {
+                const username = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value;
-                
-                const userData = this.userDb.findUser(username, password);
-                
-                if (userData) {
-                    this.currentUser = new User(userData);
-                    this.saveSession();
+
+                if (!username || !password) {
+                    alert('Mohon isi username dan password!');
+                    return;
+                }
+
+                const user = this.db.findUser(username, password);
+                if (user) {
+                    this.currentUser = new User(user.username, user.password, user.role);
+                    localStorage.setItem('pbo_session', JSON.stringify(user));
                     this.showDashboard();
                 } else {
-                    this.showError();
+                    alert('❌ Login gagal! Username atau password salah.');
+                    document.getElementById('password').value = '';
                 }
             }
-            
-            saveSession() {
-                localStorage.setItem('current_session', JSON.stringify({
-                    userId: this.currentUser.id,
-                    loginTime: this.currentUser.loginTime
-                }));
-            }
-            
-            checkSession() {
-                const session = localStorage.getItem('current_session');
-                if (session) {
-                    const sessionData = JSON.parse(session);
-                    const userData = this.userDb.getUsers().find(u => u.id === sessionData.userId);
-                    if (userData) {
-                        this.currentUser = new User(userData);
-                        this.showDashboard();
-                    }
-                }
-            }
-            
-            showDashboard() {
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                
-                document.getElementById('userName').textContent = this.currentUser.name;
-                document.getElementById('userRole').textContent = this.currentUser.role.toUpperCase();
-                document.getElementById('userRole').className = `role-badge ${this.currentUser.getRoleBadgeClass()}`;
-                document.getElementById('loginTime').textContent = `Login: ${this.currentUser.loginTime}`;
-                document.getElementById('rolePermissions').innerHTML = 
-                    `<strong>Hak Akses:</strong> ${this.currentUser.getPermissionsText()}`;
-            }
-            
-            showError() {
-                document.getElementById('errorMsg').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('errorMsg').style.display = 'none';
-                }, 3000);
-            }
-            
+
             logout() {
                 this.currentUser = null;
-                localStorage.removeItem('current_session');
+                localStorage.removeItem('pbo_session');
+                this.showLogin();
+            }
+
+            showDashboard() {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('welcomeMessage').textContent = this.currentUser.getInfo();
+            }
+
+            showLogin() {
+                document.getElementById('loginPage').style.display = 'block';
                 document.getElementById('dashboard').style.display = 'none';
-                document.getElementById('loginSection').style.display = 'block';
-                document.getElementById('loginForm').reset();
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('username').focus();
             }
         }
-        
-        // Initialize aplikasi
-        document.addEventListener('DOMContentLoaded', () => {
-            new LoginManager();
+
+        // Inisialisasi aplikasi PBO
+        const loginManager = new LoginManager();
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') {
+                loginManager.login();
+            }
         });
+
+        function cancelLogin() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('username').focus();
+        }
     </script>
 </body>
 </html>
