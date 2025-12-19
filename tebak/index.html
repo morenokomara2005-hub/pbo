@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>😂 Game Tebak-Tebakan Lucu</title>
+    <title>🎉 Game Tebak-Tebakan Lucu Anak TK</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&display=swap');
         
         * {
             margin: 0;
@@ -14,15 +14,13 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(-45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff);
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fecfef, #fad0c4, #ffd1ff);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
         @keyframes gradientShift {
@@ -31,7 +29,8 @@
             100% { background-position: 0% 50%; }
         }
 
-        .floating-shapes {
+        /* Animasi bintang mengambang */
+        .stars {
             position: fixed;
             top: 0;
             left: 0;
@@ -41,80 +40,70 @@
             z-index: 1;
         }
 
-        .shape {
+        .star {
             position: absolute;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
+            font-size: 20px;
             animation: float 6s ease-in-out infinite;
         }
 
-        .shape:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; }
-        .shape:nth-child(2) { width: 60px; height: 60px; left: 20%; animation-delay: 1s; }
-        .shape:nth-child(3) { width: 100px; height: 100px; left: 80%; animation-delay: 2s; }
-        .shape:nth-child(4) { width: 40px; height: 40px; left: 90%; animation-delay: 3s; }
-
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            10%, 90% { opacity: 1; }
             50% { transform: translateY(-20px) rotate(180deg); }
         }
 
-        .game-container {
-            background: rgba(255,255,255,0.95);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
             text-align: center;
-            max-width: 600px;
-            width: 90%;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.5);
+            position: relative;
             z-index: 10;
-            animation: bounceIn 1s ease-out;
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
         }
 
         h1 {
-            font-size: 2.5em;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            font-weight: 700;
+            font-family: 'Fredoka One', cursive;
+            font-size: 3em;
+            color: #ff6b6b;
+            text-shadow: 3px 3px 0px #fff, 6px 6px 0px #ff9a9e;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
 
         .score-board {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            font-size: 1.2em;
-            font-weight: 600;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
         }
 
         .score {
-            background: linear-gradient(45deg, #ff9ff3, #feca57);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin: 0 20px;
         }
 
         .question-container {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
-            border-radius: 20px;
-            margin: 20px 0;
-            min-height: 120px;
+            border-radius: 25px;
+            margin: 30px 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            min-height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3em;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            font-size: 1.8em;
             animation: pulse 2s infinite;
         }
 
@@ -126,27 +115,33 @@
 
         .answers {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin: 20px 0;
+            margin: 30px 0;
         }
 
         .answer-btn {
-            padding: 20px;
+            background: linear-gradient(45deg, #ffecd2, #fcb69f);
             border: none;
-            border-radius: 15px;
-            font-size: 1.1em;
-            font-weight: 600;
+            padding: 20px;
+            font-size: 1.3em;
+            border-radius: 20px;
             cursor: pointer;
+            font-weight: bold;
+            font-family: 'Comic Neue', cursive;
             transition: all 0.3s ease;
-            background: linear-gradient(45deg, #ffecd2 0%, #fcb69f 100%);
-            color: #333;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
         }
 
         .answer-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .answer-btn:active {
+            transform: translateY(0) scale(0.98);
         }
 
         .answer-btn.correct {
@@ -161,241 +156,284 @@
 
         @keyframes correctAnim {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
 
         @keyframes wrongAnim {
             0% { transform: scale(1); }
-            50% { transform: scale(0.9); }
+            25% { transform: scale(1.1) rotate(-5deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+            75% { transform: scale(1.1) rotate(-5deg); }
             100% { transform: scale(1); }
         }
 
-        .control-btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s ease;
-            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        .character {
+            font-size: 4em;
+            margin: 20px 0;
+            animation: wiggle 1s infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
             color: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .control-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-
-        .game-over {
-            display: none;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            padding: 40px;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
             border-radius: 25px;
-            margin-top: 20px;
-            animation: slideUp 0.5s ease;
+            cursor: pointer;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            margin: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
         }
 
-        @media (max-width: 600px) {
-            .answers { grid-template-columns: 1fr; }
-            h1 { font-size: 2em; }
+        .hidden {
+            display: none;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: celebrate 0.5s ease;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .celebration h2 {
+            font-size: 4em;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            animation: bounceBig 1s infinite;
+        }
+
+        @keyframes bounceBig {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
         }
     </style>
 </head>
 <body>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
+    <!-- Animasi bintang -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <h1>🎈 Tebak-Tebakan Lucu 🎈</h1>
+        
+        <div class="score-board">
+            <span class="score">❤️ Benar: <span id="correct">0</span></span>
+            <span class="score">⭐ Total: <span id="total">0</span></span>
+            <span class="score">🥰 Tingkat: <span id="level">Pemula</span></span>
+        </div>
+
+        <div class="character" id="character">🤗</div>
+
+        <div class="question-container" id="question">
+            Tekan MULAI untuk bermain yuk! 🎮
+        </div>
+
+        <div class="answers" id="answers"></div>
+
+        <div>
+            <button onclick="game.start()">🚀 MULAI BERMAIN</button>
+            <button onclick="game.nextQuestion()">🔄 TEBAK LAGI</button>
+            <button onclick="game.reset()">🔄 MULAI BARU</button>
+        </div>
     </div>
 
-    <div class="game-container" id="gameContainer">
-        <h1>😂 Tebak-Tebakan Lucu</h1>
-        <div class="score-board">
-            <span class="score">Skor: <span id="score">0</span></span>
-            <span>Soal: <span id="questionNum">1</span>/50</span>
-        </div>
-        
-        <div class="question-container" id="question">
-            Tekan "Mulai Game" untuk bermain!
-        </div>
-
-        <div class="answers" id="answers" style="display: none;">
-            <!-- Jawaban akan di-generate oleh JS -->
-        </div>
-
-        <div style="margin: 20px 0;">
-            <button class="control-btn" onclick="game.startGame()">🎮 Mulai Game</button>
-            <button class="control-btn" onclick="game.nextQuestion()" id="nextBtn" style="display: none;">➡️ Soal Berikutnya</button>
-        </div>
-
-        <div class="game-over" id="gameOver">
-            <h2>🎉 Selamat! Game Selesai!</h2>
-            <p>Skor Akhir: <span id="finalScore" style="font-size: 2em; color: #ff6b6b; font-weight: 700;">0</span></p>
-            <button class="control-btn" onclick="game.restartGame()">🔄 Main Lagi</button>
-        </div>
+    <!-- Modal perayaan -->
+    <div id="celebration" class="celebration hidden">
+        <h2 id="celebrateText">🎉 BENAR! 🎉</h2>
+        <p style="font-size: 2em;">Kamu pintar sekali! 🥰</p>
+        <button onclick="game.nextQuestion()" style="font-size: 1.5em;">Lanjut Yuk! ➡️</button>
     </div>
 
     <script>
-        // PBO Implementation - Class SnakeGame
+        // PBO Class untuk Game
         class TebakTebakanGame {
             constructor() {
-                this.questions = this.generateQuestions();
-                this.currentQuestion = 0;
-                this.score = 0;
-                this.gameActive = false;
-                this.questionElement = document.getElementById('question');
-                this.answersElement = document.getElementById('answers');
-                this.scoreElement = document.getElementById('score');
-                this.questionNumElement = document.getElementById('questionNum');
-                this.nextBtn = document.getElementById('nextBtn');
-                this.gameOverElement = document.getElementById('gameOver');
-                this.finalScoreElement = document.getElementById('finalScore');
-            }
-
-            // Method untuk generate 50 tebak-tebakan
-            generateQuestions() {
-                return [
-                    { q: "Sayuran yang paling susah dilupain?", a: ["Wortel", "Bayam", "Kolplay", "Buncis"], correct: 2 },
-                    { q: " Hewan yang paling susah dilupain?", a: ["Gajah", "Kamera", "Ubur-ubur", "Kucing"], correct: 1 },
-                    { q: "Buah yang paling susah dilupain?", a: ["Jeruk", "Melon", "Apel", "Semangka"], correct: 1 },
-                    { q: "Jaman sekarang susah dilupain apa?", a: ["Kenangan", "Notif", "Pacar", "Teman"], correct: 1 },
-                    { q: "Nenek lagi pamer cucunya yang baru lahir, bilang cucunya mirip dia. Emangnya bayi itu mirip neneknya dari mana?", a: ["Muka", "Tangan", "Keriput", "Gigi"], correct: 2 },
-                    { q: "Kamera lagi rusak. Kamu harus benerin gimana?", a: ["Ganti lensa", "Format", "Kamera kan cuma butuh 1 cameramen", "Restart"], correct: 2 },
-                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Bayam", "Buncis", "Tomat", "Wortel"], correct: 1 },
-                    { q: "Kalau kamu punya 3 apel, terus apelnya dimakan temenmu. Berapa apel yang tersisa?", a: ["0", "1", "2", "3"], correct: 3 },
-                    { q: "Burung yg paling susah dilupain?", a: ["Elang", "Merpati", "Kutilang", "Kamera"], correct: 3 },
-                    { q: "Kenapa orang takut sama hantu ?", a: ["Takut dimakan", "Takut dicium", "Takut diganggu", "Takut keliatan"], correct: 3 },
-                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Bayam", "Wortel", "Kangkung"], correct: 1 },
-                    { q: "Kalau ada 5 ekor ikan di akuarium, terus akuariumnya pecah. Berapa yang selamat?", a: ["0", "1", "Semua", "4"], correct: 2 },
-                    { q: " Hewan apa yang paling susah dilupain?", a: ["Gajah", "Ubur-ubur", "Kamera", "Kucing"], correct: 2 },
-                    { q: "Kamera lagi rusak. Gimana cara benerinnya?", a: ["Ganti baterai", "Format", "Cuma butuh 1 cameramen", "Restart"], correct: 2 },
-                    { q: "Buah yang paling susah dilupain?", a: ["Jeruk", "Melon-colak", "Apel", "Pisang"], correct: 1 },
-                    { q: "Jaman sekarang susah dilupain apa?", a: ["Kenangan lama", "Notif HP", "Pacar", "Ujian"], correct: 1 },
-                    { q: "Nenek lagi pamer cucunya yang baru lahir, bilang mirip dia. Mirip dari mana?", a: ["Muka", "Telinga", "Keriput", "Rambut"], correct: 2 },
-                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Bayam", "Tomat", "Bawang"], correct: 0 },
-                    { q: "Kalau kamu punya 3 apel, dimakan temenmu 1. Berapa apel tersisa?", a: ["2", "1", "3", "0"], correct: 2 },
-                    { q: "Burung apa yang paling susah dilupain?", a: ["Burung lovebird", "Kakatua", "Kutilang", "Kamera"], correct: 3 },
-                    { q: "Kenapa orang takut sama hantu?", a: ["Takut dicium", "Takut dimakan", "Takut diganggu", "Takut keliatan"], correct: 3 },
-                    { q: "Ikan apa yang paling susah dilupain?", a: ["Nemo", "Ikan pari", "Ikan kamera", "Ikan mas"], correct: 2 },
-                    { q: "Kalau ada 10 kucing di kandang, pintunya dibuka. Berapa yang keluar?", a: ["10", "9", "Semua", "Tidak ada"], correct: 3 },
-                    { q: "Baju apa yang paling susah dilupain?", a: ["Baju pengantin", "Baju adat", "Baju kamera", "Baju olahraga"], correct: 2 },
-                    { q: "Kenapa buah apel merah?", a: ["Karena matanya merah", "Karena belum mateng", "Karena malu", "Karena dicubit"], correct: 3 },
-                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Kol", "Bawang", "Bayam"], correct: 0 },
-                    { q: "Kalau ada 4 burung di pohon, 1 jatuh. Berapa yang tersisa?", a: ["3", "4", "0", "Tidak ada"], correct: 3 },
-                    { q: " Hewan apa yang paling susah dilupain?", a: ["Semute", "Kamera", "Semut", "Semir"], correct: 1 },
-                    { q: "Kamera lagi rusak. Harus diganti apa?", a: ["Lensanya", "Baterainya", "Cuma butuh cameramen", "Memorinya"], correct: 2 },
-                    { q: "Buah yang paling susah dilupain?", a: ["Jeruk", "Melon-colak", "Mangga", "Pisang"], correct: 1 },
-                    { q: "Jaman sekarang susah dilupain apa?", a: ["Mantannya", "Notif WA", "Ujian", "Tugas"], correct: 1 },
-                    { q: "Nenek pamer cucu barunya, katanya mirip dia. Mirip dari mana?", a: ["Hidungnya", "Matanya", "Keriputnya", "Giginya"], correct: 2 },
-                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Terong", "Bawang", "Kentang"], correct: 0 },
-                    { q: "Kalau kamu punya 5 permen, dimakan temen 3. Berapa tersisa?", a: ["2", "5", "0", "3"], correct: 1 },
-                    { q: "Burung apa yang paling susah dilupain?", a: ["Merpati", "Kutilang", "Kamera", "Elang"], correct: 2 },
-                    { q: "Kenapa orang takut sama hantu?", a: ["Takut dicium", "Takut kaya", "Takut keliatan", "Takut miskin"], correct: 2 },
-                    { q: "Ikan apa yang paling susah dilupain?", a: ["Ikan lele", "Ikan mas", "Ikan kamera", "Ikan cupang"], correct: 2 },
-                    { q: "Kalau ada 7 ayam di kandang, pintunya dibuka. Berapa keluar?", a: ["7", "6", "Semua", "Tidak ada"], correct: 3 },
-                    { q: "Baju apa yang paling susah dilupain?", a: ["Baju tidur", "Baju kamera", "Baju pesta", "Baju kerja"], correct: 1 },
-                    { q: "Kenapa buah apel merah?", a: ["Karena belum mateng", "Karena malu", "Karena lapar", "Karena dicubit"], correct: 1 },
-                    { q: "Sayuran apa yang paling susah dilupain?", a: ["Buncis", "Wortel", "Bayam", "Kol"], correct: 0 },
-                    { q: "Kalau ada 2 anjing di rumah, 1 lari. Berapa tersisa?", a: ["1", "2", "0", "3"], correct: 1 },
-                    { q: " Hewan apa yang paling susah dilupain?", a: ["Kamera", "Semute", "Semut", "Semir"], correct: 0 },
-                    { q: "Kamera lagi rusak. Solusinya apa?", a: ["Format", "Ganti casing", "Butuh cameramen", "Update software"], correct: 2 },
-                    { q: "Buah yang paling susah dilupain?", a: ["Melon-colak", "Jeruk", "Apel", "Anggur"], correct: 0 },
-                    { q: "Jaman sekarang susah dilupain apa?", a: ["Notif sosmed", "Kenangan", "Pacar lama", "Teman sekolah"], correct: 0 },
-                    { q: "Nenek pamer cucu, katanya mirip. Mirip dari mana?", a: ["Keriputnya", "Matanya", "Tangannya", "Kakinya"], correct: 0 },
-                    { q: "Tebak-tebakan apa yang paling susah dilupain?", a: ["Yang ini", "Yang kemarin", "Yang besok", "Semua"], correct: 0 }
+                this.questions = [
+                    { q: "Binatang yang punya tanduk di hidungnya?", a: ["Gajah", "Badak", "Kuda", "Semute"], correct: 1 },
+                    { q: "Buah yang warnanya kuning?", a: ["Tomat", "Jeruk", "Pisang", "Apel"], correct: 2 },
+                    { q: "Sayuran yang berbentuk bulat dan hijau?", a: ["Wortel", "Bayam", "Kolplay", "Kol"], correct: 3 },
+                    { q: "Burung yang paling besar?", a: ["Merpati", "Burung Lovebird", "Burung Gereja", "Burung Cendrawasih"], correct: 3 },
+                    { q: "Ibu kita disebut?", a: ["Kakak", "Tante", "Ibu", "Nenek"], correct: 2 },
+                    { q: "Ayah kita disebut?", a: ["Om", "Ayah", "Kakek", "Pak Lurah"], correct: 1 },
+                    { q: "Rumah dari lebah?", a: ["Sarang Burung", "Gubuk", "Sarang Lebah", "Kandang"], correct: 2 },
+                    { q: "Bukan buah, tapi mirip buah durian?", a: ["Rambutan", "Sirsak", "Salak", "Duri"], correct: 2 },
+                    { q: "Burung yang tidak bisa terbang?", a: ["Elang", "Burung Kakak Tua", "Merak", "Pingguin"], correct: 3 },
+                    { q: "Benda bulat di langit malam?", a: ["Matahari", "Bulan", "Awan", "Bintang"], correct: 1 },
+                    { q: "Sayuran yang warnanya jingga?", a: ["Bayam", "Wortel", "Brokoli", "Kol"], correct: 1 },
+                    { q: "Binatang yang suka berenang?", a: ["Semute", "Ikan", "Burung", "Kucing"], correct: 1 },
+                    { q: "Pohon apa yang daunnya paling banyak?", a: ["Pohon Kelapa", "Pohon Padi", "Pohon Bambu", "Pohon Pinus"], correct: 1 },
+                    { q: "Bukan sayur, tapi bisa dimakan?", a: ["Tomat", "Wortel", "Bayam", "Bawang"], correct: 0 },
+                    { q: "Burung apa yang suaranya paling lantang?", a: ["Merpati", "Burung Gereja", "Gagak", "Beo"], correct: 2 },
+                    { q: "Buah yang rasanya asam?", a: ["Pisang", "Jeruk", "Apel", "Anggur"], correct: 1 },
+                    { q: "Binatang peliharaan yang suka mengeong?", a: ["Anjing", "Kucing", "Kelinci", "Burung"], correct: 1 },
+                    { q: "Benda apa yang terbang di langit pagi?", a: ["Bulan", "Matahari", "Awan", "Pesawat"], correct: 1 },
+                    { q: "Sayuran yang bentuknya seperti bunga?", a: ["Brokoli", "Wortel", "Bayam", "Tomat"], correct: 0 },
+                    { q: "Ikan apa yang paling besar?", a: ["Ikan Mas", "Ikan Lele", "Ikan Pari", "Paus"], correct: 3 },
+                    { q: "Pakaian apa yang dipakai di kepala?", a: ["Sepatu", "Topi", "Celana", "Baju"], correct: 1 },
+                    { q: "Musim apa yang paling panas?", a: ["Hujan", "Panas", "Dingin", "Angin"], correct: 1 },
+                    { q: "Bunga apa yang paling indah?", a: ["Mawar", "Melati", "Anggrek", "Semua"], correct: 3 },
+                    { q: "Kendaraan apa yang berjalan di air?", a: ["Mobil", "Kapal", "Motor", "Sepeda"], correct: 1 },
+                    { q: "Warna apa yang paling cerah?", a: ["Hitam", "Putih", "Kuning", "Abu-abu"], correct: 2 },
+                    { q: "Binatang apa yang paling lucu?", a: ["Singa", "Panda", "Harimau", "Gajah"], correct: 1 },
+                    { q: "Benda apa yang bisa menyanyi?", a: ["Buku", "Televisi", "Radio", "Meja"], correct: 2 },
+                    { q: "Pohon apa yang paling tinggi?", a: ["Pohon Mangga", "Pohon Kelapa", "Pohon Kayu Ulin", "Pohon Jati"], correct: 2 },
+                    { q: "Buah apa yang paling manis?", a: ["Jeruk", "Mangga", "Pepaya", "Semua"], correct: 3 },
+                    { q: "Burung apa yang paling cantik?", a: ["Burung Gereja", "Merak", "Elang", "Burung Hantu"], correct: 1 },
+                    { q: "Sayuran apa yang paling sehat?", a: ["Kentang", "Bayam", "Jagung", "Semua"], correct: 3 },
+                    { q: "Binatang apa yang paling setia?", a: ["Anjing", "Ular", "Tikus", "Kucing"], correct: 0 },
+                    { q: "Benda apa yang paling berat?", a: ["Bola", "Gajah", "Buku", "Pensil"], correct: 1 },
+                    { q: "Musim apa yang paling dingin?", a: ["Panas", "Hujan", "Dingin", "Kering"], correct: 2 },
+                    { q: "Bunga apa yang paling wangi?", a: ["Mawar", "Melati", "Dahlia", "Semua"], correct: 3 },
+                    { q: "Kendaraan apa yang paling cepat?", a: ["Sepeda", "Mobil Balap", "Kereta", "Pesawat"], correct: 3 },
+                    { q: "Warna apa yang paling gelap?", a: ["Putih", "Kuning", "Hitam", "Merah"], correct: 2 },
+                    { q: "Binatang apa yang paling pintar?", a: ["Semute", "Burung", "Kera", "Ikan"], correct: 2 },
+                    { q: "Benda apa yang paling ringan?", a: ["Batu", "Kertas", "Besi", "Kayu"], correct: 1 },
+                    { q: "Pohon apa yang paling berguna?", a: ["Pohon Pisang", "Pohon Kelapa", "Pohon Bambu", "Semua"], correct: 3 },
+                    { q: "Buah apa yang paling bergizi?", a: ["Apel", "Jeruk", "Pisang", "Semua"], correct: 3 },
+                    { q: "Burung apa yang paling ramah?", a: ["Burung Hantu", "Merpati", "Gagak", "Burung Beo"], correct: 1 },
+                    { q: "Sayuran apa yang paling enak?", a: ["Bawang", "Bayam", "Terong", "Semua"], correct: 3 },
+                    { q: "Binatang apa yang paling lembut?", a: ["Harimau", "Kelinci", "Singa", "Beruang"], correct: 1 },
+                    { q: "Benda apa yang paling bersih?", a: ["Air", "Tanah", "Debu", "Lumpur"], correct: 0 },
+                    { q: "Musim apa yang paling segar?", a: ["Panas", "Hujan", "Kering", "Berguguran"], correct: 1 },
+                    { q: "Bunga apa yang paling kuat?", a: ["Mawar Berduri", "Melati", "Kenanga", "Anggrek"], correct: 0 },
+                    { q: "Kendaraan apa yang paling aman?", a: ["Motor", "Mobil", "Bis", "Semua"], correct: 3 },
+                    { q: "Warna apa yang paling tenang?", a: ["Merah", "Kuning", "Biru", "Hijau"], correct: 2 }
                 ];
+                this.currentIndex = 0;
+                this.correctCount = 0;
+                this.totalCount = 0;
+                this.init();
             }
 
-            startGame() {
-                this.currentQuestion = 0;
-                this.score = 0;
-                this.gameActive = true;
-                this.updateDisplay();
-                this.nextBtn.style.display = 'none';
-                document.getElementById('answers').style.display = 'grid';
-                this.showQuestion();
+            init() {
+                this.createStars();
+                document.getElementById('correct').textContent = this.correctCount;
+                document.getElementById('total').textContent = this.totalCount;
+                this.updateLevel();
             }
 
-            showQuestion() {
-                if (this.currentQuestion >= this.questions.length) {
-                    this.endGame();
-                    return;
+            createStars() {
+                const starsContainer = document.getElementById('stars');
+                for(let i = 0; i < 20; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.innerHTML = ['⭐','✨','🌟'][Math.floor(Math.random()*3)];
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.animationDelay = Math.random() * 6 + 's';
+                    starsContainer.appendChild(star);
                 }
+            }
 
-                const q = this.questions[this.currentQuestion];
-                this.questionElement.textContent = q.q;
-                this.answersElement.innerHTML = '';
+            start() {
+                this.nextQuestion();
+            }
 
-                q.a.forEach((answer, index) => {
+            nextQuestion() {
+                this.currentIndex = Math.floor(Math.random() * this.questions.length);
+                const q = this.questions[this.currentIndex];
+                
+                document.getElementById('question').textContent = q.q;
+                const answersContainer = document.getElementById('answers');
+                answersContainer.innerHTML = '';
+                
+                // Shuffle array untuk random jawaban
+                const shuffled = [...q.a].sort(() => Math.random() - 0.5);
+                shuffled.forEach((answer, index) => {
                     const btn = document.createElement('button');
                     btn.className = 'answer-btn';
                     btn.textContent = answer;
-                    btn.onclick = () => this.checkAnswer(index, q.correct);
-                    this.answersElement.appendChild(btn);
+                    btn.onclick = () => this.checkAnswer(answer, q.correct);
+                    answersContainer.appendChild(btn);
                 });
-
-                this.updateDisplay();
             }
 
-            checkAnswer(selected, correct) {
-                if (!this.gameActive) return;
-
-                const buttons = this.answersElement.querySelectorAll('.answer-btn');
-                
+            checkAnswer(selected, correctIndex) {
+                const buttons = document.querySelectorAll('.answer-btn');
                 buttons.forEach((btn, index) => {
-                    if (index === correct) {
+                    if (btn.textContent === this.questions[this.currentIndex].a[correctIndex]) {
                         btn.classList.add('correct');
-                    } else if (index === selected && index !== correct) {
+                    } else {
                         btn.classList.add('wrong');
                     }
                     btn.disabled = true;
                 });
 
-                if (selected === correct) {
-                    this.score += 10;
-                    this.updateDisplay();
+                if (selected === this.questions[this.currentIndex].a[correctIndex]) {
+                    this.correctCount++;
+                    document.getElementById('character').textContent = '🎉🥳✨';
+                    this.showCelebration();
+                } else {
+                    document.getElementById('character').textContent = '😅🤗💕';
+                    setTimeout(() => this.nextQuestion(), 1500);
                 }
 
-                this.nextBtn.style.display = 'inline-block';
-                this.gameActive = false;
+                this.totalCount++;
+                document.getElementById('correct').textContent = this.correctCount;
+                document.getElementById('total').textContent = this.totalCount;
+                this.updateLevel();
             }
 
-            nextQuestion() {
-                this.currentQuestion++;
-                this.gameActive = true;
-                this.nextBtn.style.display = 'none';
-                this.showQuestion();
+            showCelebration() {
+                document.getElementById('celebration').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('celebration').classList.add('hidden');
+                    document.getElementById('character').textContent = '🤗';
+                    setTimeout(() => this.nextQuestion(), 500);
+                }, 2000);
             }
 
-            updateDisplay() {
-                this.scoreElement.textContent = this.score;
-                this.questionNumElement.textContent = this.currentQuestion + 1;
+            updateLevel() {
+                const percentage = this.totalCount > 0 ? (this.correctCount / this.totalCount) * 100 : 0;
+                const levelSpan = document.getElementById('level');
+                if (percentage >= 90) levelSpan.textContent = '🥇 SUPER!';
+                else if (percentage >= 75) levelSpan.textContent = '🥈 Hebat!';
+                else if (percentage >= 50) levelSpan.textContent = '🥉 Bagus!';
+                else levelSpan.textContent = 'Pemula 💪';
             }
 
-            endGame() {
-                this.gameActive = false;
-                this.finalScoreElement.textContent = this.score;
-                this.gameOverElement.style.display = 'block';
-                document.getElementById('answers').style.display = 'none';
-            }
-
-            restartGame() {
-                this.gameOverElement.style.display = 'none';
-                this.startGame();
+            reset() {
+                this.correctCount = 0;
+                this.totalCount = 0;
+                document.getElementById('correct').textContent = 0;
+                document.getElementById('total').textContent = 0;
+                document.getElementById('level').textContent = 'Pemula';
+                document.getElementById('question').textContent = 'Tekan MULAI untuk bermain yuk! 🎮';
+                document.getElementById('answers').innerHTML = '';
+                document.querySelectorAll('.answer-btn').forEach(btn => btn.remove());
+                document.getElementById('character').textContent = '🤗';
             }
         }
 
-        // Inisialisasi game (PBO)
+        // Inisialisasi game PBO
         const game = new TebakTebakanGame();
     </script>
 </body>
