@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Login PBO - Local Storage</title>
+    <title>Aplikasi Login PBO - 6 Users</title>
     <style>
         * {
             margin: 0;
@@ -12,118 +12,216 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
             min-height: 100vh;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 25%, #fecfef 75%, #ff9a9e 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff6b9d' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: float 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-1000px) rotate(360deg); }
         }
 
         .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(255, 107, 157, 0.3);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #ff6b9d;
             margin-bottom: 2rem;
-            font-size: 1.8rem;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
+            position: relative;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             color: #555;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1rem;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            padding: 15px 20px;
+            border: 3px solid #ffeef2;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            transform: translateY(-2px);
         }
 
         .btn-group {
             display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 1.2rem;
+            margin-top: 2rem;
         }
 
         .btn {
             flex: 1;
-            padding: 12px;
+            padding: 15px 25px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-login {
-            background: #28a745;
+            background: linear-gradient(45deg, #28a745, #20c997);
             color: white;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
         }
 
         .btn-login:hover {
-            background: #218838;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.6);
         }
 
         .btn-cancel {
-            background: white;
-            color: #666;
-            border: 2px solid #ddd;
+            background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
         }
 
         .btn-cancel:hover {
-            background: #f8f9fa;
-            border-color: #667eea;
-            color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.6);
         }
 
         .dashboard {
             display: none;
             text-align: center;
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .welcome {
-            font-size: 1.5rem;
-            color: #28a745;
-            margin-bottom: 1rem;
-            font-weight: bold;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #ff6b9d, #28a745);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            text-shadow: none;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin: 1.5rem 0;
+            border: 2px solid rgba(255, 107, 157, 0.3);
         }
 
         .logout-btn {
-            background: #dc3545;
+            background: linear-gradient(45deg, #dc3545, #fd7e14);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 15px 40px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .logout-btn:hover {
-            background: #c82333;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.5);
+        }
+
+        .emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
     </style>
 </head>
@@ -131,13 +229,14 @@
     <div class="container">
         <!-- Login Form -->
         <div id="loginPage">
-            <h1>🔐 Login Sistem</h1>
+            <div class="emoji">🌟</div>
+            <h1>Login PBO Lucu</h1>
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" placeholder="Masukkan username">
+                <label for="username">👤 Username:</label>
+                <input type="text" id="username" placeholder="moreno, fury, ferra...">
             </div>
             <div class="form-group">
-                <label for="password">Password:</label>
+                <label for="password">🔒 Password:</label>
                 <input type="password" id="password" placeholder="Masukkan password">
             </div>
             <div class="btn-group">
@@ -148,16 +247,19 @@
 
         <!-- Dashboard -->
         <div id="dashboard" class="dashboard">
-            <h1>✅ Dashboard</h1>
+            <div class="emoji">🎉</div>
+            <h1>Dashboard</h1>
             <div id="welcomeMessage" class="welcome">Hai, User!</div>
-            <p>Selamat datang di sistem PBO dengan Local Storage</p>
-            <br>
-            <button class="logout-btn" onclick="loginManager.logout()">Logout</button>
+            <div class="user-info">
+                <p><strong>✅ Login Berhasil!</strong></p>
+                <p>Selamat datang di aplikasi PBO dengan Local Storage JSON</p>
+            </div>
+            <button class="logout-btn" onclick="loginManager.logout()">🚪 Logout</button>
         </div>
     </div>
 
     <script>
-        // Class User - Representasi data user sebagai object
+        // Class User - Object user PBO
         class User {
             constructor(username, password, role) {
                 this.username = username;
@@ -166,14 +268,14 @@
             }
 
             getInfo() {
-                return `Hai, ${this.username}! Role: ${this.role}`;
+                return `Hai, ${this.username}! ✨`;
             }
         }
 
-        // Database Users - Object berisi 3 user predefined
+        // Database Users - Object dengan 6 users
         class UserDatabase {
             constructor() {
-                this.KEY = 'pbo_users_db';
+                this.KEY = 'pbo_users_6_db';
                 this.initDatabase();
             }
 
@@ -181,6 +283,9 @@
                 if (!localStorage.getItem(this.KEY)) {
                     const users = [
                         new User('moreno', '123', 'user'),
+                        new User('fury', 'furry', 'user'),
+                        new User('ferra', 'ferra', 'user'),
+                        new User('rally', 'rally', 'user'),
                         new User('admin', 'admin', 'admin'),
                         new User('guest', 'guest', 'guest')
                     ];
@@ -199,7 +304,7 @@
             }
         }
 
-        // LoginManager - Controller utama PBO
+        // LoginManager - Controller PBO utama
         class LoginManager {
             constructor() {
                 this.db = new UserDatabase();
@@ -208,8 +313,7 @@
             }
 
             init() {
-                // Auto login jika session masih valid
-                const session = localStorage.getItem('pbo_session');
+                const session = localStorage.getItem('pbo_session_6');
                 if (session) {
                     const userData = JSON.parse(session);
                     this.currentUser = new User(userData.username, userData.password, userData.role);
@@ -222,24 +326,25 @@
                 const password = document.getElementById('password').value;
 
                 if (!username || !password) {
-                    alert('Mohon isi username dan password!');
+                    alert('😅 Mohon isi username dan password!');
                     return;
                 }
 
                 const user = this.db.findUser(username, password);
                 if (user) {
                     this.currentUser = new User(user.username, user.password, user.role);
-                    localStorage.setItem('pbo_session', JSON.stringify(user));
+                    localStorage.setItem('pbo_session_6', JSON.stringify(user));
                     this.showDashboard();
                 } else {
                     alert('❌ Login gagal! Username atau password salah.');
                     document.getElementById('password').value = '';
+                    document.getElementById('username').focus();
                 }
             }
 
             logout() {
                 this.currentUser = null;
-                localStorage.removeItem('pbo_session');
+                localStorage.removeItem('pbo_session_6');
                 this.showLogin();
             }
 
@@ -258,7 +363,7 @@
             }
         }
 
-        // Inisialisasi aplikasi PBO
+        // Inisialisasi aplikasi
         const loginManager = new LoginManager();
 
         // Enter key support
