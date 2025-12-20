@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐛 CACING BIRU LUCU 🐛</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(-45deg, #74b9ff, #0984e3, #6c5ce7, #a29bfe);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            overflow: hidden;
+            animation: gradientShift 10s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255,255,255,0.95);
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.2em;
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 1.5em;
+            color: #2d3436;
+            font-weight: bold;
+        }
+
+        /* Game Canvas */
+        .game-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        #gameCanvas {
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+            box-shadow: inset 0 0 50px rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-up { background: linear-gradient(180deg, #00b894, #00a085); color: white; }
+        .btn-left { background: linear-gradient(90deg, #e17055, #d63031); color: white; }
+        .btn-down { background: linear-gradient(180deg, #fdcb6e, #e17055); color: white; }
+        .btn-right { background: linear-gradient(90deg, #00cec9, #00b894); color: white; }
+        .btn-pause { background: linear-gradient(135deg, #a29bfe, #6c5ce7); color: white; width: 80px; }
+
+        .control-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Game Over */
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            z-index: 200;
+        }
+
+        .final-score {
+            font-size: 3em;
+            color: #00b894;
+            margin: 20px 0;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #00cec9, #00b894);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐛 CACING BIRU LUCU 🐛</h1>
+            <div class="score">Skor: <span id="score">0</span> | Panjang: <span id="length">1</span></div>
+        </div>
+
+        <div class="game-container">
+            <canvas id="gameCanvas" width="600" height="500"></canvas>
+            
+            <div class="game-over" id="gameOver">
+                <h2>🎉 GAME OVER! 🎉</h2>
+                <div class="final-score" id="finalScore">0</div>
+                <p>Skor Tertinggi: <span id="highScore">0</span></p>
+                <button class="restart-btn" onclick="game.restart()">🔄 MAIN LAGI</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn btn-pause" onclick="game.togglePause()" id="pauseBtn">⏸️</button>
+            <button class="control-btn btn-up" onclick="game.changeDirection('up')">↑</button>
+            <button class="control-btn btn-left" onclick="game.changeDirection('left')">←</button>
+            <button class="control-btn btn-down" onclick="game.changeDirection('down')">↓</button>
+            <button class="control-btn btn-right" onclick="game.changeDirection('right')">→</button>
+        </div>
+    </div>
+
+    <script>
+        // KONSEP PBO - Class Snake (Cacing)
+        class Snake {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.gridSize = 20;
+                this.tileCountX = canvas.width / this.gridSize;
+                this.tileCountY = canvas.height / this.gridSize;
+                
+                this.body = [
+                    {x: 10, y: 10}
+                ];
+                this.dx = 0;
+                this.dy = 0;
+                this.maxTail = 1;
+            }
+
+            update() {
+                const head = {x: this.body[0].x + this.dx, y: this.body[0].y + this.dy};
+                
+                // Wall collision
+                if (head.x < 0 || head.x >= this.tileCountX || head.y < 0 || head.y >= this.tileCountY) {
+                    return false;
+                }
+
+                // Self collision
+                for (let segment of this.body) {
+                    if (head.x === segment.x && head.y === segment.y) {
+                        return false;
+                    }
+                }
+
+                this.body.unshift(head);
+                
+                if (this.body.length > this.maxTail) {
+                    this.body.pop();
+                }
+                
+                return true;
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Gambar cacing biru lucu
+                this.body.forEach((segment, index) => {
+                    this.ctx.save();
+                    
+                    // Kepala cacing (lebih besar & lucu)
+                    if (index === 0) {
+                        this.ctx.shadowColor = '#74b9ff';
+                        this.ctx.shadowBlur = 20;
+                        this.ctx.fillStyle = '#0984e3';
+                        this.ctx.beginPath();
+                        this.ctx.arc(
+                            segment.x * this.gridSize + this.gridSize/2,
+                            segment.y * this.gridSize + this.gridSize/2,
+                            this.gridSize * 0.9,
+                            0,
+                            Math.PI * 2
+                        );
+                        this.ctx.fill();
+                        
+                        // Mata cacing
+                        this.ctx.fillStyle = 'white';
+                        this.ctx.beginPath();
+                        this.ctx.arc(
+                            segment.x * this.gridSize + this.gridSize/3,
+                            segment.y * this.gridSize + this.gridSize/3,
+                            this.gridSize * 0.25,
+                            0,
+                            Math.PI * 2
+                        );
+                        this.ctx.fill();
+                        this.ctx.beginPath();
+                        this.ctx.arc(
+                            segment.x * this.gridSize + this.gridSize * 2/3,
+                            segment.y * this.gridSize + this.gridSize/3,
+                            this.gridSize * 0.25,
+                            0,
+                            Math.PI * 2
+                        );
+                        this.ctx.fill();
+                        
+                        // Pupil
+                        this.ctx.fillStyle = '#2d3436';
+                        this.ctx.beginPath();
+                        this.ctx.arc(
+                            segment.x * this.gridSize + this.gridSize/3.5,
+                            segment.y * this.gridSize + this.gridSize/3.2,
+                            this.gridSize * 0.1,
+                            0,
+                            Math.PI * 2
+                        );
+                        this.ctx.fill();
+                        this.ctx.beginPath();
+                        this.ctx.arc(
+                            segment.x * this.gridSize + this.gridSize * 2.3/3,
+                            segment.y * this.gridSize + this.gridSize/3.2,
+                            this.gridSize * 0.1,
+                            0,
+                            Math.PI * 2
+                        );
+                        this.ctx.fill();
+                        
+                        // Senyum
+                        this.ctx.strokeStyle = '#ffeaa7';
+                        this.ctx.lineWidth = 3;
+                        this.ctx.lineCap = 'round';
+                        this.ctx.beginPath();
+                        this.ctx.arc(
+                            segment.x * this.gridSize + this.gridSize/2,
+                            segment.y * this.gridSize + this.gridSize * 0.7,
+                            this.gridSize * 0.4,
+                            0,
+                            Math.PI
+                        );
+                        this.ctx.stroke();
+                    } else {
+                        // Badan cacing
+                        this.ctx.shadowColor = '#74b9ff';
+                        this.ctx.shadowBlur = 15;
+                        this.ctx.fillStyle = `hsl(${200 + index * 5}, 70%, 60%)`;
+                        this.ctx.fillRect(
+                            segment.x * this.gridSize + 2,
+                            segment.y * this.gridSize + 2,
+                            this.gridSize - 4,
+                            this.gridSize - 4
+                        );
+                        
+                        // Highlight badan
+                        this.ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                        this.ctx.fillRect(
+                            segment.x * this.gridSize + 3,
+                            segment.y * this.gridSize + 3,
+                            this.gridSize - 8,
+                            this.gridSize * 0.3
+                        );
+                    }
+                    
+                    this.ctx.restore();
+                });
+            }
+
+            eat(food) {
+                if (this.body[0].x === food.x && this.body[0].y === food.y) {
+                    this.maxTail++;
+                    return true;
+                }
+                return false;
+            }
+
+            changeDirection(direction) {
+                const LEFT = 0;
+                const UP = 1;
+                const RIGHT = 2;
+                const DOWN = 3;
+
+                const dirMap = {
+                    'left': LEFT, 'up': UP, 'right': RIGHT, 'down': DOWN
+                };
+
+                switch(dirMap[direction]) {
+                    case LEFT: if (this.dy !== 0) { this.dx = -1; this.dy = 0; } break;
+                    case UP: if (this.dx !== 0) { this.dx = 0; this.dy = -1; } break;
+                    case RIGHT: if (this.dy !== 0) { this.dx = 1; this.dy = 0; } break;
+                    case DOWN: if (this.dx !== 0) { this.dx = 0; this.dy = 1; } break;
+                }
+            }
+        }
+
+        // Class Food
+        class Food {
+            constructor(canvas, snake) {
+                this.canvas = canvas;
+                this.snake = snake;
+                this.gridSize = 20;
+                this.spawn();
+            }
+
+            spawn() {
+                do {
+                    this.x = Math.floor(Math.random() * (this.canvas.width / this.gridSize));
+                    this.y = Math.floor(Math.random() * (this.canvas.height / this.gridSize));
+                } while (this.snake.body.some(segment => segment.x === this.x && segment.y === this.y));
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.shadowColor = '#ff7675';
+                ctx.shadowBlur = 15;
+                
+                // Makanan berbentuk permen lucu
+                ctx.fillStyle = '#fd79a8';
+                ctx.beginPath();
+                ctx.arc(
+                    this.x * this.gridSize + this.gridSize/2,
+                    this.y * this.gridSize + this.gridSize/2,
+                    this.gridSize * 0.45,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+                
+                // Highlight permen
+                ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                ctx.beginPath();
+                ctx.arc(
+                    this.x * this.gridSize + this.gridSize/3,
+                    this.y * this.gridSize + this.gridSize/3,
+                    this.gridSize * 0.15,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+
+        // Class AudioManager
+        class AudioManager {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            playEat() {
+                this.playMelody([523, 659, 784], 0.15);
+            }
+
+            playGameOver() {
+                this.playMelody([392, 349, 294], 0.3);
+            }
+
+            playBackground() {
+                setInterval(() => {
+                    this.playMelody([440, 494, 523, 587], 0.2);
+                }, 2000);
+            }
+
+            playTone(freq, duration, delay=0, volume=0.3, type='sine') {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.frequency.value = freq;
+                osc.type = type;
+                
+                gain.gain.setValueAtTime(volume, this.ctx.currentTime + delay);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + delay + duration);
+                
+                osc.start(this.ctx.currentTime + delay);
+                osc.stop(this.ctx.currentTime + delay + duration);
+            }
+
+            playMelody(notes, duration) {
+                notes.forEach((note, i) => {
+                    setTimeout(() => this.playTone(note, duration, 0, 0.4), i * 150);
+                });
+            }
+        }
+
+        // Class Game Utama
+        class Game {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.snake = new Snake(this.canvas);
+                this.food = new Food(this.canvas, this.snake);
+                this.audio = new AudioManager();
+                this.score = 0;
+                this.highScore = localStorage.getItem('snakeHighScore') || 0;
+                this.gameRunning = false;
+                this.gameLoop = null;
+                this.paused = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.canvas.addEventListener('click', () => {
+                    if (!this.gameRunning) this.start();
+                });
+                
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowUp': this.changeDirection('up'); break;
+                        case 'ArrowDown': this.changeDirection('down'); break;
+                        case 'ArrowLeft': this.changeDirection('left'); break;
+                        case 'ArrowRight': this.changeDirection('right'); break;
+                        case ' ': e.preventDefault(); this.togglePause(); break;
+                    }
+                });
+                
+                this.draw();
+            }
+
+            start() {
+                this.gameRunning = true;
+                this.paused = false;
+                this.audio.playBackground();
+                this.gameLoop = setInterval(() => this.update(), 150);
+            }
+
+            update() {
+                if (!this.gameRunning || this.paused) return;
+                
+                if (!this.snake.update()) {
+                    this.gameOver();
+                    return;
+                }
+                
+                if (this.snake.eat(this.food)) {
+                    this.score += 10;
+                    this.food.spawn();
+                    this.audio.playEat();
+                    document.getElementById('score').textContent = this.score;
+                    document.getElementById('length').textContent = this.snake.maxTail;
+                }
+                
+                this.snake.draw();
+                this.food.draw(this.snake.ctx);
+            }
+
+            draw() {
+                this.snake.draw();
+                this.food.draw(this.snake.ctx);
+            }
+
+            changeDirection(direction) {
+                this.snake.changeDirection(direction);
+            }
+
+            togglePause() {
+                this.paused = !this.paused;
+                document.getElementById('pauseBtn').textContent = this.paused ? '▶️' : '⏸️';
+            }
+
+            gameOver() {
+                this.gameRunning = false;
+                clearInterval(this.gameLoop);
+                this.audio.playGameOver();
+                
+                if (this.score > this.highScore) {
+                    this.highScore = this.score;
+                    localStorage.setItem('snakeHighScore', this.score);
+                }
+                
+                document.getElementById('finalScore').textContent = this.score;
+                document.getElementById('highScore').textContent = this.highScore;
+                document.getElementById('gameOver').style.display = 'block';
+            }
+
+            restart() {
+                this.gameRunning = false;
+                clearInterval(this.gameLoop);
+                this.score = 0;
+                this.snake = new Snake(this.canvas);
+                this.food = new Food(this.canvas, this.snake);
+                document.getElementById('score').textContent = 0;
+                document.getElementById('length').textContent = 1;
+                document.getElementById('gameOver').style.display = 'none';
+            }
+        }
+
+        // Inisialisasi Game
+        const game = new Game();
+    </script>
+</body>
+</html>
