@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧠 GAME ASAH OTAK AHE HEGARMUKTI 🧠</title>
+    <title>🧠 GAME ASAH OTAK AHE HEGARMUKTI 🎉</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&display=swap');
         
@@ -15,10 +15,17 @@
 
         body {
             font-family: 'Comic Neue', cursive;
-            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 25%, #fecfef 75%, #ff9a9e 100%);
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fecfef, #a8edea);
+            background-size: 400% 400%;
             min-height: 100vh;
             overflow-x: hidden;
-            position: relative;
+            animation: gradientShift 12s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Latar belakang animasi anak-anak */
@@ -32,45 +39,15 @@
             z-index: 1;
         }
 
-        .floating-balloon {
-            position: absolute;
-            font-size: 40px;
-            animation: floatUp 8s infinite linear;
-        }
+        .sun { position: absolute; top: 10%; right: 10%; font-size: 60px; animation: shine 3s ease-in-out infinite; }
+        .cloud { position: absolute; font-size: 40px; animation: floatCloud 25s linear infinite; }
+        .bird { position: absolute; font-size: 25px; animation: flyBird 15s linear infinite; }
+        .star { position: absolute; font-size: 18px; color: #ffd700; animation: twinkle 2.5s infinite; }
 
-        .star-twinkle {
-            position: absolute;
-            font-size: 25px;
-            color: #ffd700;
-            animation: twinkle 2s infinite;
-        }
-
-        .cloud-float {
-            position: absolute;
-            font-size: 35px;
-            animation: cloudFloat 15s infinite linear;
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.3); }
-        }
-
-        @keyframes cloudFloat {
-            0% { transform: translateX(-150px); }
-            100% { transform: translateX(110vw); }
-        }
+        @keyframes shine { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.1) rotate(180deg); } }
+        @keyframes floatCloud { 0% { transform: translateX(-100px); } 100% { transform: translateX(110vw); } }
+        @keyframes flyBird { 0% { transform: translateX(-100px) translateY(0); } 100% { transform: translateX(110vw) translateY(30px); } }
+        @keyframes twinkle { 0%, 100% { opacity: 0.4; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.3); } }
 
         .container {
             max-width: 1000px;
@@ -78,165 +55,64 @@
             padding: 20px;
             position: relative;
             z-index: 10;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
         /* Menu Awal */
-        .start-menu {
+        .start-screen {
             text-align: center;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 40px;
             padding: 60px 40px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            animation: bounceInMenu 1s ease;
+            max-width: 600px;
+            margin: 100px auto;
+            animation: bounceIn 1.5s ease;
         }
 
-        @keyframes bounceInMenu {
-            0% { transform: scale(0.5); opacity: 0; }
-            60% { transform: scale(1.05); }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.5) translateY(50px); }
+            60% { opacity: 1; transform: scale(1.1); }
+            100% { transform: scale(1) translateY(0); }
         }
 
-        .start-title {
+        h1 {
             font-family: 'Fredoka One', cursive;
-            font-size: 3.5em;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f093fb);
+            font-size: 3.2em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f093fb, #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-            text-shadow: 3px 3px 0px rgba(255,255,255,0.8);
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: titleGlow 2s ease-in-out infinite alternate;
         }
 
-        .menu-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 20px 50px;
-            font-size: 1.6em;
-            border-radius: 50px;
-            cursor: pointer;
-            margin: 15px;
-            font-weight: bold;
-            font-family: 'Comic Neue', cursive;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            min-width: 200px;
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 15px #ff6b6b); }
+            to { filter: drop-shadow(0 0 25px #4ecdc4); }
         }
 
-        .menu-btn:hover {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .menu-btn.exit {
-            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-        }
-
-        .menu-btn.start {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
-            font-size: 1.8em;
-            padding: 25px 60px;
-        }
-
-        /* Game Interface */
-        .game-interface {
-            display: none;
-        }
-
-        .header-game {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .game-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: 2.8em;
-            color: #ff6b6b;
-            text-shadow: 3px 3px 0px #fff;
-            margin-bottom: 15px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .stats-bar {
+        .btn-group {
             display: flex;
-            justify-content: space-around;
-            background: rgba(255,255,255,0.9);
-            border-radius: 25px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        }
-
-        .stat-box {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #ff6b6b;
-        }
-
-        .stat-label {
-            font-size: 1.1em;
-            color: #2c3e50;
-        }
-
-        .question-container {
-            background: rgba(255,255,255,0.95);
-            border-radius: 35px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .question-text {
-            font-size: 2em;
-            color: #2c3e50;
-            margin-bottom: 35px;
-            line-height: 1.4;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            flex-direction: column;
             gap: 20px;
-            max-width: 800px;
-            margin: 0 auto;
+            margin-top: 40px;
         }
 
-        .option-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .btn {
+            padding: 25px 40px;
+            font-size: 1.6em;
             border: none;
-            padding: 25px;
-            font-size: 1.5em;
-            border-radius: 25px;
+            border-radius: 35px;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            font-weight: bold;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
             position: relative;
             overflow: hidden;
         }
 
-        .option-btn::before {
+        .btn::before {
             content: '';
             position: absolute;
             top: 0;
@@ -247,452 +123,468 @@
             transition: left 0.7s;
         }
 
-        .option-btn:hover::before {
-            left: 100%;
+        .btn:hover::before { left: 100%; }
+
+        .btn-start { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .btn-reset { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+        .btn-exit { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; }
+        .btn-next { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; width: 100%; }
+
+        .btn:hover { transform: translateY(-12px) scale(1.05); box-shadow: 0 20px 45px rgba(0,0,0,0.3); }
+        .btn:active { transform: translateY(-8px) scale(1.02); }
+
+        /* Game Screen */
+        .game-screen { display: none; }
+        .result-screen { display: none; text-align: center; background: rgba(255,255,255,0.95); border-radius: 40px; padding: 50px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.9);
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        .option-btn:hover {
-            transform: translateY(-12px) scale(1.05);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        .stat { text-align: center; font-size: 1.4em; }
+        .stat-number { font-size: 2.2em; font-weight: bold; color: #ff6b6b; }
+
+        .question-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 35px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            transform: perspective(1000px) rotateX(8deg);
+            transition: all 0.4s ease;
         }
 
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
+        .question-box:hover { transform: perspective(1000px) rotateX(2deg) scale(1.02); }
+
+        .question-text {
+            font-size: 2em;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 35px;
+            line-height: 1.4;
+            animation: fadeInUp 1s ease;
         }
 
-        .option-btn.correct {
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 30px;
+            font-size: 1.5em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-weight: bold;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-10px) scale(1.08);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.3);
+        }
+
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+        .option-btn.correct { 
             background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
             animation: celebrate 0.8s ease;
         }
-
-        .option-btn.wrong {
+        .option-btn.wrong { 
             background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            animation: shakeX 0.6s ease;
+            animation: shake 0.6s ease;
         }
 
         @keyframes celebrate {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2) rotate(10deg); }
-            100% { transform: scale(1); }
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.15) rotate(5deg); }
+            75% { transform: scale(1.15) rotate(-5deg); }
         }
 
-        @keyframes shakeX {
+        @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+            20% { transform: translateX(-12px); }
+            40% { transform: translateX(12px); }
+            60% { transform: translateX(-8px); }
+            80% { transform: translateX(8px); }
         }
 
-        .control-buttons {
-            text-align: center;
-        }
-
-        .control-btn {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            border: none;
-            padding: 18px 45px;
-            font-size: 1.4em;
-            border-radius: 50px;
-            cursor: pointer;
-            margin: 10px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            min-width: 180px;
-        }
-
-        .control-btn:hover {
-            transform: scale(1.08);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .control-btn.reset {
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-        }
-
-        .control-btn.exit {
-            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-        }
-
-        /* Game Over */
-        .game-over-screen {
-            display: none;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(255,215,0,0.95), rgba(255,165,0,0.95));
-            border-radius: 40px;
-            padding: 60px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-            animation: bounceInMenu 1s ease;
+        /* Result Screen */
+        .result-title {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-family: 'Fredoka One', cursive;
         }
 
         .final-score {
-            font-size: 2.5em;
-            color: #2c3e50;
+            font-size: 4em;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .grade {
+            font-size: 2em;
+            padding: 15px 30px;
+            border-radius: 25px;
             margin: 20px 0;
             font-weight: bold;
         }
 
         @media (max-width: 768px) {
-            .start-title { font-size: 2.5em; }
-            .game-title { font-size: 2.2em; }
+            h1 { font-size: 2.5em; }
             .question-text { font-size: 1.6em; }
             .options-grid { grid-template-columns: 1fr; }
-            .stats-bar { flex-direction: column; gap: 15px; }
+            .btn-group { gap: 15px; }
+            .btn { font-size: 1.3em; padding: 20px 30px; }
         }
     </style>
 </head>
 <body>
     <!-- Latar belakang animasi -->
-    <div class="bg-anim" id="bgAnimation"></div>
+    <div class="bg-anim" id="bgAnim">
+        <div class="sun">☀️</div>
+    </div>
 
     <div class="container">
-        <!-- Menu Awal -->
-        <div class="start-menu" id="startMenu">
-            <h1 class="start-title">🎉 GAME ASAHI OTAK 🎉<br>UNTUK ANAK-ANAK AHE HEGARMUKTI 🧠</h1>
-            <button class="menu-btn start" onclick="game.startGame()">🚀 MULAI GAME</button>
-            <br>
-            <button class="menu-btn exit" onclick="game.exitGame()">🚪 KELUAR</button>
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <h1>🎈 GAME AHE HEGARMUKTI 🎈<br>AHE HEGARMUKTI CERDAS 🧠</h1>
+            <p style="font-size: 1.5em; color: #666; margin-bottom: 20px;">Ayo jawab 10 soal seru dan dapatkan nilai terbaik!</p>
+            
+            <div class="btn-group">
+                <button class="btn btn-start" onclick="game.start()">🚀 MULAI GAME</button>
+                <button class="btn btn-exit" onclick="game.exitGame()">🚪 KELUAR</button>
+            </div>
         </div>
 
-        <!-- Game Interface -->
-        <div class="game-interface" id="gameInterface">
-            <div class="header-game">
-                <h2 class="game-title">🧠 ASAH OTAK ANAK 🧠</h2>
-                <div class="stats-bar">
-                    <div class="stat-box">
-                        <div class="stat-number" id="currentScore">0</div>
-                        <div class="stat-label">SKOR</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="currentQuestion">1</div>
-                        <div class="stat-label">SOAL</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="livesLeft">3</div>
-                        <div class="stat-label">NYAWA ❤️</div>
-                    </div>
+        <!-- Game Screen -->
+        <div class="game-screen" id="gameScreen">
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number" id="scoreNum">0</div>
+                    Skor
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="questionNum">1</div>
+                    Soal
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="totalQuestions">10</div>
+                    Total
                 </div>
             </div>
 
-            <div class="question-container" id="questionContainer">
-                <div class="question-text" id="questionText">Pilih tombol untuk memulai!</div>
+            <div class="question-box">
+                <div class="question-text" id="questionText">Klik MULAI untuk memulai game!</div>
                 <div class="options-grid" id="optionsGrid"></div>
-            </div>
-
-            <div class="control-buttons">
-                <button class="control-btn" id="nextBtn" onclick="game.nextQuestion()" style="display: none;">
+                <button class="btn btn-next" id="nextBtn" style="display: none;" onclick="game.nextQuestion()">
                     ➡️ SOAL SELANJUTNYA ➡️
                 </button>
-                <button class="control-btn reset" onclick="game.resetGame()">
-                    🔄 ULANG GAME
-                </button>
-                <button class="control-btn exit" onclick="game.exitGame()">
-                    🚪 KELUAR
-                </button>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn btn-reset" onclick="game.reset()">🔄 RESET GAME</button>
             </div>
         </div>
 
-        <!-- Game Over Screen -->
-        <div class="game-over-screen" id="gameOverScreen">
-            <h2 id="finalMessage">SELAMAT! 🎉</h2>
-            <div class="final-score" id="finalScoreDisplay">Skor: 0/10</div>
-            <button class="menu-btn start" onclick="game.startGame()">🔄 MAIN LAGI</button>
-            <br>
-            <button class="menu-btn exit" onclick="game.exitGame()">🚪 KELUAR</button>
+        <!-- Result Screen -->
+        <div class="result-screen" id="resultScreen">
+            <h2 class="result-title" id="resultTitle">SELAMAT! 🎉</h2>
+            <div class="final-score" id="finalScore">0</div>
+            <div id="grade" class="grade"></div>
+            <p style="font-size: 1.4em; margin: 30px 0;">Terima kasih telah bermain! Kamu sangat hebat! 💪</p>
+            
+            <div class="btn-group">
+                <button class="btn btn-start" onclick="game.restart()">🎮 MAIN LAGI</button>
+                <button class="btn btn-exit" onclick="game.exitGame()">🏠 KE MENU UTAMA</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // PBO - Class Utama Game
+        // KONSEP PBO - Class Game Utama
         class Game {
             constructor() {
                 this.score = 0;
-                this.currentQuestionIndex = 0;
-                this.lives = 3;
-                this.isGameActive = false;
-                this.questions = [
-                    {
-                        question: "🐰 Berapa hasil dari 4 + 5?",
-                        options: ["A. 7", "B. 5", "C. 9", "D. 2"],
-                        correct: 2
-                    },
-                    {
-                        question: "🧮 Berapa 8 + 2 sama dengan?",
-                        options: ["A. 2", "B. 5", "C. 10", "D. 3"],
-                        correct: 2
-                    },
-                    {
-                        question: "⚽ Mana yang bentuknya lingkaran?",
-                        options: ["A. Bola", "B. Kursi", "C. Meja", "D. Pensil"],
-                        correct: 0
-                    },
-                    {
-                        question: "➖ Berapa 10 - 5?",
-                        options: ["A. 3", "B. 5", "C. 2", "D. 7"],
-                        correct: 1
-                    },
-                    {
-                        question: "🍎 Berapa 3 + 4?",
-                        options: ["A. 6", "B. 7", "C. 5", "D. 8"],
-                        correct: 1
-                    },
-                    {
-                        question: "🐘 Hewan apa yang besar?",
-                        options: ["A. Semut", "B. Kucing", "C. GajaH", "D. Burung"],
-                        correct: 2
-                    }
-                ];
-                this.audioManager = new AudioManager();
-                this.backgroundAnimator = new BackgroundAnimator();
+                this.currentQuestion = 0;
+                this.totalQuestions = 10;
+                this.questions = this.generateQuestions();
+                this.currentQuestions = [];
+                this.audio = new AudioManager();
                 this.init();
             }
 
             init() {
-                this.createBackgroundElements();
-                this.updateDisplay();
-                this.audioManager.playWelcome();
+                this.createBackground();
+                this.audio.playWelcome();
             }
 
-            startGame() {
-                this.isGameActive = true;
-                this.shuffleQuestions();
-                this.score = 0;
-                this.lives = 3;
-                this.currentQuestionIndex = 0;
-                
-                document.getElementById('startMenu').style.display = 'none';
-                document.getElementById('gameInterface').style.display = 'block';
-                document.getElementById('gameOverScreen').style.display = 'none';
-                
-                this.renderCurrentQuestion();
-                this.audioManager.playStart();
+            generateQuestions() {
+                return [
+                    // Matematika
+                    { q: "🐰 4 + 5 = ?", opts: ["A. 7", "B. 5", "C. 9", "D. 2"], correct: 2 },
+                    { q: "🧮 8 + 2 = ?", opts: ["A. 2", "B. 5", "C. 10", "D. 3"], correct: 2 },
+                    { q: "➖ 10 - 5 = ?", opts: ["A. 3", "B. 5", "C. 2", "D. 7"], correct: 1 },
+                    { q: "✖️ 2 × 3 = ?", opts: ["A. 5", "B. 6", "C. 8", "D. 4"], correct: 1 },
+                    { q: "➗ 10 ÷ 2 = ?", opts: ["A. 2", "B. 5", "C. 4", "D. 6"], correct: 1 },
+                    
+                    // Pengetahuan Umum
+                    { q: "🌈 Berapa warna pelangi?", opts: ["A. 5", "B. 6", "C. 7", "D. 8"], correct: 2 },
+                    { q: "🦁 Hewan apa raja hutan?", opts: ["A. Harimau", "B. Singa", "C. Gajah", "D. Semute"], correct: 1 },
+                    { q: "⚽ Bentuk bola itu?", opts: ["A. Persegi", "B. Segitiga", "C. Lingkaran", "D. Persegipanjang"], correct: 2 },
+                    { q: "👨‍👩‍👧‍👦 Keluarga terdiri dari?", opts: ["A. Ayah Ibu Anak", "B. Hanya Ayah", "C. Hanya Ibu", "D. Teman"], correct: 0 },
+                    { q: "🌹 Bunga mawar warnanya?", opts: ["A. Biru", "B. Merah", "C. Kuning", "D. Hitam"], correct: 1 }
+                ];
             }
 
-            shuffleQuestions() {
-                for (let i = this.questions.length - 1; i > 0; i--) {
+            shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
-                    [this.questions[i], this.questions[j]] = [this.questions[j], this.questions[i]];
+                    [array[i], array[j]] = [array[j], array[i]];
                 }
+                return array;
             }
 
-            renderCurrentQuestion() {
-                if (this.currentQuestionIndex >= this.questions.length) {
-                    this.gameOver();
-                    return;
-                }
+            start() {
+                this.score = 0;
+                this.currentQuestion = 0;
+                this.currentQuestions = this.shuffle([...this.questions]).slice(0, this.totalQuestions);
+                document.getElementById('startScreen').style.display = 'none';
+                document.getElementById('gameScreen').style.display = 'block';
+                this.renderQuestion();
+                this.audio.playStart();
+            }
 
-                const question = this.questions[this.currentQuestionIndex];
-                document.getElementById('questionText').textContent = question.question;
+            renderQuestion() {
+                const q = this.currentQuestions[this.currentQuestion];
+                document.getElementById('questionText').textContent = q.q;
+                document.getElementById('questionNum').textContent = this.currentQuestion + 1;
+                document.getElementById('scoreNum').textContent = this.score;
+
+                const grid = document.getElementById('optionsGrid');
+                grid.innerHTML = '';
                 
-                const optionsGrid = document.getElementById('optionsGrid');
-                optionsGrid.innerHTML = '';
-                
-                question.options.forEach((option, index) => {
+                q.opts.forEach((opt, i) => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
-                    btn.textContent = option;
-                    btn.onclick = () => this.handleAnswer(index);
-                    optionsGrid.appendChild(btn);
+                    btn.textContent = opt;
+                    btn.onclick = () => this.selectAnswer(i);
+                    grid.appendChild(btn);
                 });
 
-                this.updateDisplay();
                 document.getElementById('nextBtn').style.display = 'none';
             }
 
-            handleAnswer(selectedIndex) {
-                if (!this.isGameActive) return;
-
-                const correctIndex = this.questions[this.currentQuestionIndex].correct;
+            selectAnswer(index) {
+                const correctIndex = this.currentQuestions[this.currentQuestion].correct;
                 const buttons = document.querySelectorAll('.option-btn');
                 
-                buttons.forEach((btn, index) => {
+                buttons.forEach((btn, i) => {
                     btn.disabled = true;
-                    if (index === correctIndex) {
+                    if (i === correctIndex) {
                         btn.classList.add('correct');
-                    } else if (index === selectedIndex && index !== correctIndex) {
+                    } else if (i === index) {
                         btn.classList.add('wrong');
-                        this.lives--;
                     }
                 });
 
-                if (selectedIndex === correctIndex) {
-                    this.score += 2;
-                    this.audioManager.playCorrect();
+                if (index === correctIndex) {
+                    this.score += 10;
+                    this.audio.playCorrect();
+                    if (this.currentQuestion < this.totalQuestions - 1) {
+                        setTimeout(() => this.nextQuestion(), 2000);
+                    } else {
+                        setTimeout(() => this.showResult(), 2000);
+                    }
                 } else {
-                    this.audioManager.playWrong();
-                }
-
-                this.updateDisplay();
-
-                if (this.lives <= 0 || this.currentQuestionIndex >= this.questions.length - 1) {
-                    setTimeout(() => this.gameOver(), 2000);
-                } else {
+                    this.audio.playWrong();
                     setTimeout(() => {
-                        document.getElementById('nextBtn').style.display = 'inline-block';
+                        document.getElementById('nextBtn').style.display = 'block';
                     }, 1500);
                 }
+                
+                document.getElementById('scoreNum').textContent = this.score;
             }
 
             nextQuestion() {
-                this.currentQuestionIndex++;
-                this.renderCurrentQuestion();
+                this.currentQuestion++;
+                this.renderQuestion();
+                this.audio.playNext();
             }
 
-            resetGame() {
-                this.score = 0;
-                this.lives = 3;
-                this.currentQuestionIndex = 0;
-                this.shuffleQuestions();
-                this.renderCurrentQuestion();
-                this.audioManager.playReset();
-            }
-
-            gameOver() {
-                this.isGameActive = false;
-                document.getElementById('gameInterface').style.display = 'none';
-                document.getElementById('gameOverScreen').style.display = 'block';
+            showResult() {
+                document.getElementById('gameScreen').style.display = 'none';
+                document.getElementById('resultScreen').style.display = 'block';
                 
-                const finalScoreEl = document.getElementById('finalScoreDisplay');
-                const finalMessageEl = document.getElementById('finalMessage');
+                const finalScore = document.getElementById('finalScore');
+                finalScore.textContent = this.score + '/100';
                 
-                finalScoreEl.textContent = `Skor Akhir: ${this.score}/${this.questions.length * 2}`;
+                const title = document.getElementById('resultTitle');
+                const grade = document.getElementById('grade');
                 
-                if (this.score >= 12) {
-                    finalMessageEl.textContent = '🏆 JUARA KELAS! PERFECT! 🏆';
-                } else if (this.score >= 8) {
-                    finalMessageEl.textContent = '⭐ SANGAT BAGUS! ⭐';
-                } else if (this.score >= 5) {
-                    finalMessageEl.textContent = '👍 BAGUS! Terus Berlatih 👍';
+                if (this.score >= 90) {
+                    title.textContent = '🏆 SUPER CERDAS! 🏆';
+                    grade.textContent = 'Nilai A+ ⭐⭐⭐';
+                    grade.style.background = 'linear-gradient(135deg, #ffd700, #ffed4e)';
+                    grade.style.color = '#2c3e50';
+                } else if (this.score >= 70) {
+                    title.textContent = '👍 SANGAT BAGUS! 👍';
+                    grade.textContent = 'Nilai A ⭐⭐';
+                    grade.style.background = 'linear-gradient(135deg, #43e97b, #38f9d7)';
+                } else if (this.score >= 50) {
+                    title.textContent = '🎉 BAGUS SEKALI! 🎉';
+                    grade.textContent = 'Nilai B ⭐';
+                    grade.style.background = 'linear-gradient(135deg, #4facfe, #00f2fe)';
                 } else {
-                    finalMessageEl.textContent = '💪 SEMANGAT BELAJAR LAGI! 💪';
+                    title.textContent = '💪 KERJA BAGUS! 💪';
+                    grade.textContent = 'Latihan Lagi!';
+                    grade.style.background = 'linear-gradient(135deg, #fa709a, #fee140)';
                 }
                 
-                this.audioManager.playGameOver();
+                this.audio.playResult();
+            }
+
+            reset() {
+                this.currentQuestion = 0;
+                this.score = 0;
+                this.currentQuestions = this.shuffle([...this.questions]).slice(0, this.totalQuestions);
+                document.getElementById('resultScreen').style.display = 'none';
+                document.getElementById('gameScreen').style.display = 'block';
+                this.renderQuestion();
+                this.audio.playReset();
+            }
+
+            restart() {
+                this.reset();
             }
 
             exitGame() {
-                if (confirm('Yakin mau keluar dari game? 😊')) {
-                    this.audioManager.playExit();
-                    window.close();
+                if (confirm('Yakin mau keluar? Progress akan hilang! 😢')) {
+                    document.getElementById('gameScreen').style.display = 'none';
+                    document.getElementById('resultScreen').style.display = 'none';
+                    document.getElementById('startScreen').style.display = 'block';
+                    this.audio.playExit();
                 }
             }
 
-            updateDisplay() {
-                document.getElementById('currentScore').textContent = this.score;
-                document.getElementById('currentQuestion').textContent = this.currentQuestionIndex + 1;
-                document.getElementById('livesLeft').textContent = this.lives;
-            }
-
-            createBackgroundElements() {
-                this.backgroundAnimator.createElements();
+            createBackground() {
+                const bg = document.getElementById('bgAnim');
+                
+                // Clouds
+                for (let i = 0; i < 8; i++) {
+                    const cloud = document.createElement('div');
+                    cloud.className = 'cloud';
+                    cloud.textContent = '☁️';
+                    cloud.style.left = Math.random() * 100 + '%';
+                    cloud.style.top = (Math.random() * 40 + 5) + '%';
+                    cloud.style.animationDelay = Math.random() * 20 + 's';
+                    bg.appendChild(cloud);
+                }
+                
+                // Birds
+                for (let i = 0; i < 5; i++) {
+                    const bird = document.createElement('div');
+                    bird.className = 'bird';
+                    bird.textContent = '🐦';
+                    bird.style.left = Math.random() * 100 + '%';
+                    bird.style.top = (Math.random() * 20 + 20) + '%';
+                    bird.style.animationDelay = Math.random() * 15 + 's';
+                    bg.appendChild(bird);
+                }
+                
+                // Stars
+                for (let i = 0; i < 25; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.textContent = '✨';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.animationDelay = Math.random() * 2.5 + 's';
+                    bg.appendChild(star);
+                }
             }
         }
 
-        // PBO - Class AudioManager
+        // Class AudioManager - Efek Suara Unik
         class AudioManager {
             constructor() {
-                this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
             }
 
             playWelcome() {
-                this.playMelody([392, 440, 494, 523], 0.3);
+                this.playMelody([392, 440, 494, 523, 659], 0.3);
             }
 
             playStart() {
-                this.playMelody([523, 659, 784, 659], 0.4);
+                this.playTone(523, 0.4, 0, 1.2, 0.4); // C5
+                this.playTone(659, 0.4, 0.2, 1.2, 0.4); // E5
             }
 
             playCorrect() {
-                this.playMelody([659, 784, 932, 1047], 0.3);
+                this.playMelody([659, 784, 880, 988], 0.25); // E5 G5 A5 B5
             }
 
             playWrong() {
-                this.playTone(392, 0.5, 0, 'sine', 0.2);
-                this.playTone(349, 0.5, 0.2, 'sine', 0.2);
+                this.playTone(392, 0.5, 0, 1, 0.3, 'sawtooth'); // G4 shake
+                this.playTone(349, 0.5, 0.3, 1, 0.3, 'sawtooth'); // F4
+            }
+
+            playNext() {
+                this.playTone(523, 0.2, 0, 0.8, 0.3);
             }
 
             playReset() {
-                this.playMelody([440, 494, 523, 494], 0.2);
+                this.playMelody([440, 494, 523, 587], 0.2);
             }
 
-            playGameOver() {
-                this.playMelody([523, 494, 440, 392], 0.6);
+            playResult() {
+                this.playMelody([523, 659, 784, 988, 1047], 0.4); // C5 E5 G5 B5 C6
             }
 
             playExit() {
-                this.playTone(196, 1, 0, 'sine', 0.1);
+                this.playTone(196, 1, 0, 2, 0.2); // G3 fade out
+            }
+
+            playTone(freq, duration, delay, type=0, vol=0.3, wave='sine') {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.frequency.value = freq;
+                osc.type = wave;
+                
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime + delay);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + delay + duration);
+                
+                osc.start(this.ctx.currentTime + delay);
+                osc.stop(this.ctx.currentTime + delay + duration);
             }
 
             playMelody(notes, duration) {
-                notes.forEach((note, index) => {
-                    setTimeout(() => {
-                        this.playTone(note, duration, 0, 'sine', 0.3);
-                    }, index * 200);
+                notes.forEach((note, i) => {
+                    setTimeout(() => this.playTone(note, duration, 0, 0, 0.4), i * 200);
                 });
             }
-
-            playTone(frequency, duration, delay, type = 'sine', volume = 0.3) {
-                const oscillator = this.audioCtx.createOscillator();
-                const gainNode = this.audioCtx.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(this.audioCtx.destination);
-                
-                oscillator.frequency.value = frequency;
-                oscillator.type = type;
-                
-                gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime + delay);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + delay + duration);
-                
-                oscillator.start(this.audioCtx.currentTime + delay);
-                oscillator.stop(this.audioCtx.currentTime + delay + duration);
-            }
         }
 
-        // PBO - Class BackgroundAnimator
-        class BackgroundAnimator {
-            constructor() {
-                this.container = document.getElementById('bgAnimation');
-            }
-
-            createElements() {
-                // Balon
-                for (let i = 0; i < 8; i++) {
-                    const balloon = document.createElement('div');
-                    balloon.className = 'floating-balloon';
-                    balloon.innerHTML = ['🎈', '🎊', '🎉', '⭐'][Math.floor(Math.random() * 4)];
-                    balloon.style.left = Math.random() * 100 + '%';
-                    balloon.style.animationDelay = Math.random() * 8 + 's';
-                    balloon.style.animationDuration = (6 + Math.random() * 4) + 's';
-                    this.container.appendChild(balloon);
-                }
-
-                // Bintang
-                for (let i = 0; i < 30; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star-twinkle';
-                    star.innerHTML = '✨';
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 100 + '%';
-                    star.style.animationDelay = Math.random() * 2 + 's';
-                    this.container.appendChild(star);
-                }
-
-                // Awan
-                for (let i = 0; i < 6; i++) {
-                    const cloud = document.createElement('div');
-                    cloud.className = 'cloud-float';
-                    cloud.innerHTML = '☁️';
-                    cloud.style.top = (10 + Math.random() * 30) + '%';
-                    cloud.style.animationDelay = Math.random() * 15 + 's';
-                    cloud.style.animationDuration = (12 + Math.random() * 8) + 's';
-                    this.container.appendChild(cloud);
-                }
-            }
-        }
-
-        // Inisialisasi Game (Single Instance)
+        // Inisialisasi Game
         const game = new Game();
     </script>
 </body>
