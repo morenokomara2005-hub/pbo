@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Belajar Anak TK - AHE Hegarmukti</title>
+    <title>Game Belajar AHE Hegarmukti 🐰🎈</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,34 +14,40 @@
         }
 
         body {
-            font-family: 'Comic Sans MS', cursive;
-            background: linear-gradient(45deg, #ff9a9e, #fecfef, #fecfef, #fad0c4);
-            background-size: 400% 400%;
-            animation: gradientShift 10s ease infinite;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 25%, #fecfef 75%, #ff9a9e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            animation: rainbowShift 8s ease-in-out infinite;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
+        @keyframes rainbowShift {
+            0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         /* Animasi bintang dan balon */
         .stars {
-            position: absolute;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 1;
         }
 
         .star {
             position: absolute;
-            color: #ffd700;
             font-size: 20px;
+            color: #ffd700;
             animation: twinkle 2s infinite;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 30px;
+            animation: float 6s ease-in-out infinite;
         }
 
         @keyframes twinkle {
@@ -47,31 +55,22 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        .balloon {
-            position: absolute;
-            font-size: 30px;
-            animation: float 6s infinite ease-in-out;
-        }
-
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            text-align: center;
             position: relative;
             z-index: 10;
         }
 
-        h1 {
-            color: #ff6b6b;
-            font-size: 2.5em;
-            text-shadow: 3px 3px 0px #fff;
-            margin-bottom: 20px;
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
             animation: bounce 2s infinite;
         }
 
@@ -81,78 +80,91 @@
             60% { transform: translateY(-5px); }
         }
 
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5em;
+            color: #ff6b6b;
+            text-shadow: 3px 3px 0px #fff, 5px 5px 0px #ff6b6b;
+            margin-bottom: 10px;
+        }
+
         .score {
-            background: rgba(255,255,255,0.9);
-            padding: 15px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             font-size: 1.5em;
             color: #4ecdc4;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
         .question-container {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 25px;
             padding: 30px;
-            margin: 20px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            animation: slideIn 0.8s ease-out;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: all 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+        .question-container:hover {
+            transform: perspective(1000px) rotateX(0deg) scale(1.02);
         }
 
         .question {
             font-size: 1.8em;
-            color: #e74c3c;
+            color: #2c3e50;
             margin-bottom: 25px;
-            font-weight: bold;
+            text-align: center;
+            line-height: 1.4;
         }
 
         .options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            max-width: 500px;
-            margin: 0 auto;
         }
 
         .option {
-            background: linear-gradient(45deg, #a8e6cf, #81d4fa);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
             padding: 20px;
             font-size: 1.3em;
-            border-radius: 15px;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-weight: bold;
+            font-family: 'Comic Neue', cursive;
             position: relative;
             overflow: hidden;
         }
 
-        .option:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
         }
 
-        .option:active {
-            transform: translateY(0);
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         .option.correct {
-            background: linear-gradient(45deg, #d4ed92, #b8dc76);
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
             animation: correctAnim 0.6s ease;
         }
 
         .option.wrong {
-            background: linear-gradient(45deg, #f8d7da, #f5c6cb);
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
             animation: wrongAnim 0.6s ease;
         }
 
@@ -164,100 +176,112 @@
 
         @keyframes wrongAnim {
             0% { transform: scale(1); }
-            25% { transform: scale(0.95); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(0.95) rotate(-2deg); }
             100% { transform: scale(1); }
         }
 
-        .next-btn, .start-btn {
-            background: linear-gradient(45deg, #ff9ff3, #f368e0);
+        .next-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
             border: none;
             padding: 15px 40px;
             font-size: 1.4em;
-            border-radius: 30px;
+            border-radius: 50px;
             cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            margin: 0 auto;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
             transition: all 0.3s ease;
         }
 
-        .next-btn:hover, .start-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        .next-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
-        .hidden {
+        .game-over {
+            text-align: center;
+            background: rgba(255, 215, 0, 0.95);
+            border-radius: 25px;
+            padding: 40px;
             display: none;
         }
 
-        .celebration {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .restart-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .progress {
             width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.9);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            animation: celebrationPop 0.5s ease;
-        }
-
-        @keyframes celebrationPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .celebration h2 {
-            font-size: 3em;
-            color: #f39c12;
+            height: 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 10px;
             margin-bottom: 20px;
-            animation: bounce 1s infinite;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            width: 20%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 2em; }
+            .question { font-size: 1.4em; }
         }
     </style>
 </head>
 <body>
-    <!-- Elemen dekorasi -->
+    <!-- Animasi latar belakang -->
     <div class="stars" id="stars"></div>
 
     <div class="container">
-        <h1>🎉 Game Belajar AHE Hegarmukti 🎉</h1>
-        
-        <div class="score">
-            Skor: <span id="score">0</span> / <span id="total">0</span>
-        </div>
-
-        <!-- Halaman mulai -->
-        <div id="startPage">
-            <h2>Selamat datang di game belajar yang seru!</h2>
-            <p style="font-size: 1.2em; margin: 20px 0; color: #666;">
-                Tekan tombol untuk mulai belajar sambil bermain! 🎈
-            </p>
-            <button class="start-btn" onclick="game.start()">🚀 MULAI BERMAIN 🚀</button>
-        </div>
-
-        <!-- Halaman pertanyaan -->
-        <div id="gamePage" class="hidden">
-            <div class="question-container">
-                <div class="question" id="question"></div>
-                <div class="options" id="options"></div>
+        <!-- Header -->
+        <div class="header">
+            <h1>🎉 Game Belajar TK 🎉</h1>
+            <div class="score" id="score">⭐ Skor: 0/5 ⭐</div>
+            <div class="progress">
+                <div class="progress-bar" id="progress"></div>
             </div>
-            <button class="next-btn hidden" id="nextBtn" onclick="game.nextQuestion()">➡️ Pertanyaan Berikutnya</button>
         </div>
 
-        <!-- Halaman selesai -->
-        <div id="endPage" class="hidden">
-            <div class="celebration">
-                <h2 id="finalMessage">🎊 SELAMAT! 🎊</h2>
-                <p style="font-size: 1.5em;">Skor akhir: <span id="finalScore"></span></p>
-                <button class="start-btn" onclick="game.restart()">🔄 Main Lagi</button>
-            </div>
+        <!-- Pertanyaan -->
+        <div class="question-container" id="questionContainer">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">➡️ Pertanyaan Berikutnya ➡️</button>
+        </div>
+
+        <!-- Game Over -->
+        <div class="game-over" id="gameOver">
+            <h2 id="finalMessage"></h2>
+            <p id="finalScore"></p>
+            <button class="restart-btn" onclick="restartGame()">🎮 Main Lagi! 🎮</button>
         </div>
     </div>
 
-    <!-- Audio backsound -->
+    <!-- Audio -->
     <audio id="bgMusic" loop>
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBSb7P8N2QQAoUXrTp66hVFApGn+DyvmwhBS
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHf
