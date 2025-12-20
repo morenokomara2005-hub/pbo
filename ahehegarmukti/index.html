@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAME ASAH OTAK AHE HEGARMUKTI 🎉</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&family=Balsamiq+Sans:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&display=swap');
         
         * {
             margin: 0;
@@ -15,12 +15,11 @@
 
         body {
             font-family: 'Comic Neue', cursive;
-            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fecfef, #a8edea, #fed6e3);
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             min-height: 100vh;
             overflow-x: hidden;
-            animation: gradientShift 10s ease infinite;
-            position: relative;
+            animation: gradientShift 15s ease infinite;
         }
 
         @keyframes gradientShift {
@@ -30,7 +29,7 @@
         }
 
         /* Animasi latar belakang */
-        .bg-elements {
+        .background-anim {
             position: fixed;
             top: 0;
             left: 0;
@@ -43,24 +42,24 @@
         .cloud {
             position: absolute;
             font-size: 40px;
-            animation: floatCloud 15s linear infinite;
+            animation: floatCloud 20s linear infinite;
         }
 
         .star {
             position: absolute;
-            color: #ffd700;
             font-size: 20px;
+            color: #ffd700;
             animation: twinkle 2s infinite;
         }
 
         @keyframes floatCloud {
             0% { transform: translateX(-100px) translateY(0px); }
-            100% { transform: translateX(110%) translateY(20px); }
+            100% { transform: translateX(110%) translateY(50px); }
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.4; transform: scale(1) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         .container {
@@ -73,13 +72,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
-            animation: bounceHeader 2s ease-in-out infinite;
-        }
-
-        @keyframes bounceHeader {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            margin-bottom: 30px;
         }
 
         h1 {
@@ -89,91 +82,66 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 3px 3px 0px rgba(255,255,255,0.8);
-            margin-bottom: 15px;
-            line-height: 1.2;
+            text-shadow: 3px 3px 0px rgba(255,255,255,0.5);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+            margin-bottom: 10px;
         }
 
-        .subtitle {
-            font-size: 1.4em;
-            color: #2c3e50;
-            font-weight: bold;
-            font-family: 'Balsamiq Sans', cursive;
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 10px #ff6b6b); }
+            to { filter: drop-shadow(0 0 20px #4ecdc4); }
         }
 
-        .game-stats {
+        .stats {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: space-around;
             background: rgba(255,255,255,0.9);
-            padding: 15px 25px;
             border-radius: 25px;
+            padding: 15px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .score, .level {
-            font-size: 1.5em;
+        .stat-item {
+            text-align: center;
+            font-size: 1.3em;
             font-weight: bold;
         }
 
-        .score { color: #f39c12; }
-        .level { color: #9b59b6; }
-
-        .progress-container {
-            background: rgba(255,255,255,0.9);
-            border-radius: 20px;
-            padding: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        .stat-number {
+            font-size: 2em;
+            color: #ff6b6b;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(90deg, #ddd, #f0f0f0);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #feca57);
-            border-radius: 10px;
-            transition: width 0.8s ease;
-            position: relative;
-            animation: progressGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes progressGlow {
-            0% { box-shadow: 0 0 5px rgba(255,107,107,0.5); }
-            100% { box-shadow: 0 0 20px rgba(78,205,196,0.8); }
-        }
-
-        .question-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+        .question-box {
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 30px;
-            padding: 40px 30px;
+            padding: 40px;
             margin-bottom: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            transform: perspective(1000px) rotateX(8deg);
+            transform: perspective(1000px) rotateX(5deg);
             transition: all 0.4s ease;
-            border: 3px solid rgba(255,255,255,0.5);
+            border: 5px solid transparent;
+            background-clip: padding-box;
         }
 
-        .question-card:hover {
-            transform: perspective(1000px) rotateX(2deg) scale(1.02);
+        .question-box:hover {
+            transform: perspective(1000px) rotateX(0deg) scale(1.02);
         }
 
         .question-text {
             font-size: 1.8em;
             color: #2c3e50;
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             line-height: 1.4;
-            font-weight: bold;
-            font-family: 'Balsamiq Sans', cursive;
+            animation: bounceIn 1s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .options-grid {
@@ -187,18 +155,15 @@
             color: white;
             border: none;
             padding: 25px;
-            font-size: 1.3em;
+            font-size: 1.4em;
             border-radius: 25px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             font-weight: bold;
             font-family: 'Comic Neue', cursive;
             position: relative;
             overflow: hidden;
-            min-height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         .option-btn::before {
@@ -217,8 +182,8 @@
         }
 
         .option-btn:hover {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
 
         .option-btn:disabled {
@@ -228,23 +193,23 @@
 
         .option-btn.correct {
             background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
-            animation: correctBounce 0.6s ease;
+            animation: celebrate 0.6s ease;
         }
 
         .option-btn.wrong {
             background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            animation: wrongShake 0.6s ease;
+            animation: shake 0.6s ease;
         }
 
-        @keyframes correctBounce {
-            0%, 100% { transform: translateY(-8px) scale(1.05); }
-            50% { transform: translateY(-15px) scale(1.15); }
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15) rotate(5deg); }
         }
 
-        @keyframes wrongShake {
+        @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
         .next-btn {
@@ -260,28 +225,21 @@
             font-family: 'Comic Neue', cursive;
             font-weight: bold;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         .next-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
 
-        .game-complete {
+        .game-over {
             text-align: center;
-            background: linear-gradient(135deg, rgba(255,215,0,0.95), rgba(255,193,7,0.95));
+            background: linear-gradient(135deg, rgba(255,215,0,0.95), rgba(255,165,0,0.95));
             border-radius: 30px;
             padding: 50px;
             display: none;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-        }
-
-        .final-score {
-            font-size: 2.5em;
-            color: #2c3e50;
-            margin: 20px 0;
-            font-weight: bold;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
         .restart-btn {
@@ -292,87 +250,275 @@
             font-size: 1.6em;
             border-radius: 50px;
             cursor: pointer;
-            font-family: 'Fredoka One', cursive;
+            font-family: 'Comic Neue', cursive;
             font-weight: bold;
-            margin-top: 30px;
+            margin-top: 25px;
             transition: all 0.3s ease;
-            box-shadow: 0 15px 40px rgba(79,172,254,0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         .restart-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 20px 50px rgba(79,172,254,0.6);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         @media (max-width: 768px) {
             h1 { font-size: 2.2em; }
             .question-text { font-size: 1.4em; }
             .options-grid { grid-template-columns: 1fr; }
-            .game-stats { flex-direction: column; gap: 15px; }
-        }
-
-        .sound-icon {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 2em;
-            cursor: pointer;
-            z-index: 100;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            .stats { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
 <body>
-    <!-- Sound Control -->
-    <div class="sound-icon" id="soundToggle" onclick="GameManager.toggleSound()">🔊</div>
-
-    <!-- Background Elements -->
-    <div class="bg-elements" id="bgElements"></div>
+    <!-- Latar belakang animasi -->
+    <div class="background-anim" id="bgAnim"></div>
 
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <h1>GAME ASAH OTAK</h1>
-            <p class="subtitle">AHE HEGARMUKTI 🐰✨</p>
-        </div>
-
-        <!-- Game Stats -->
-        <div class="game-stats">
-            <div class="score" id="scoreDisplay">⭐ Skor: 0</div>
-            <div class="level" id="questionNum">Pertanyaan 1/5</div>
-        </div>
-
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+            <h1>🧠 GAME ASAH OTAK 🧠<br>AHE HEGARMUKTI 🎈</h1>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="score">0</div>
+                    Skor
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="questionNum">1</div>
+                    Soal
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="lives">3</div>
+                    Nyawa ❤️
+                </div>
             </div>
         </div>
 
-        <!-- Question Card -->
-        <div class="question-card">
-            <div class="question-text" id="questionText">Selamat datang di Game Asah Otak!</div>
+        <div class="question-box" id="questionBox">
+            <div class="question-text" id="questionText">Klik tombol pilihan untuk memulai!</div>
             <div class="options-grid" id="optionsGrid"></div>
-            <button class="next-btn" id="nextBtn" onclick="GameManager.nextQuestion()">➡️ SOAL SELANJUTNYA ➡️</button>
+            <button class="next-btn" id="nextBtn" onclick="game.nextQuestion()">➡️ SOAL SELANJUTNYA ➡️</button>
         </div>
 
-        <!-- Game Complete -->
-        <div class="game-complete" id="gameComplete">
-            <h2 id="finalTitle">🎉 SELAMAT! 🎉</h2>
-            <div class="final-score" id="finalScore">Skor: 0/5</div>
-            <p id="finalMessage">Kamu hebat sekali!</p>
-            <button class="restart-btn" onclick="GameManager.restartGame()">🔄 MAIN LAGI!</button>
+        <div class="game-over" id="gameOver">
+            <h2 id="finalTitle">SELAMAT! 🎉</h2>
+            <p id="finalScoreText">Skor Final: <span id="finalScore">0</span>/10</p>
+            <button class="restart-btn" onclick="game.restart()">🔄 MAIN LAGI! 🔄</button>
         </div>
     </div>
 
-    <!-- Audio Elements -->
-    <audio id="bgMusic" loop preload="auto">
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSxFz/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSx
+    <!-- Audio Effects (Menggunakan Web Audio API untuk sound unik) -->
+    <script>
+        // KONSEP PBO - Class Game
+        class Game {
+            constructor() {
+                this.score = 0;
+                this.currentQuestion = 0;
+                this.lives = 3;
+                this.questions = [
+                    {
+                        question: "🐰 Berapa hasil 4 + 5 = ?",
+                        options: ["A. 7", "B. 5", "C. 9 ✅", "D. 2"],
+                        correct: 2
+                    },
+                    {
+                        question: "👩‍🏫 Siapa guru di AHE Hegarmukti?",
+                        options: ["A. Bu Aul & Bu Furry ✅", "B. Bu Intan & Bu Ani", "C. Bu Ferra & Bu Rally", "D. Bu Ani & Bu Silvy"],
+                        correct: 0
+                    },
+                    {
+                        question: "🧮 Berapa 8 + 2 = ?",
+                        options: ["A. 2", "B. 5", "C. 10 ✅", "D. 3"],
+                        correct: 2
+                    },
+                    {
+                        question: "⚽ Mana bentuk lingkaran?",
+                        options: ["A. Bola ✅", "B. Kursi", "C. Meja", "D. Pensil"],
+                        correct: 0
+                    },
+                    {
+                        question: "➖ Berapa 10 - 5 = ?",
+                        options: ["A. 3", "B. 5 ✅", "C. 2", "D. 7"],
+                        correct: 1
+                    }
+                ];
+                this.audio = new AudioManager();
+                this.init();
+            }
+
+            init() {
+                this.renderQuestion();
+                this.createBackgroundAnim();
+                this.audio.playBackground();
+            }
+
+            renderQuestion() {
+                const q = this.questions[this.currentQuestion];
+                document.getElementById('questionText').textContent = q.question;
+                const optionsGrid = document.getElementById('optionsGrid');
+                optionsGrid.innerHTML = '';
+                
+                q.options.forEach((option, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = option;
+                    btn.onclick = () => this.selectAnswer(index);
+                    optionsGrid.appendChild(btn);
+                });
+                
+                document.getElementById('questionNum').textContent = this.currentQuestion + 1;
+                document.getElementById('score').textContent = this.score;
+                document.getElementById('lives').textContent = this.lives;
+                document.getElementById('nextBtn').style.display = 'none';
+            }
+
+            selectAnswer(selectedIndex) {
+                const correctIndex = this.questions[this.currentQuestion].correct;
+                const buttons = document.querySelectorAll('.option-btn');
+                
+                buttons.forEach((btn, index) => {
+                    if (index === correctIndex) {
+                        btn.classList.add('correct');
+                        this.audio.playCorrect();
+                    } else if (index === selectedIndex && index !== correctIndex) {
+                        btn.classList.add('wrong');
+                        this.audio.playWrong();
+                        this.lives--;
+                    }
+                    btn.disabled = true;
+                });
+
+                if (selectedIndex === correctIndex) {
+                    this.score += 2;
+                    setTimeout(() => {
+                        this.nextQuestion();
+                    }, 1500);
+                } else {
+                    setTimeout(() => {
+                        document.getElementById('nextBtn').style.display = 'block';
+                    }, 1500);
+                }
+
+                this.updateDisplay();
+            }
+
+            nextQuestion() {
+                this.currentQuestion++;
+                if (this.currentQuestion >= this.questions.length || this.lives <= 0) {
+                    this.gameOver();
+                } else {
+                    this.renderQuestion();
+                }
+            }
+
+            updateDisplay() {
+                document.getElementById('score').textContent = this.score;
+                document.getElementById('lives').textContent = this.lives;
+            }
+
+            gameOver() {
+                document.getElementById('questionBox').style.display = 'none';
+                const gameOver = document.getElementById('gameOver');
+                gameOver.style.display = 'block';
+                
+                const finalScore = document.getElementById('finalScore');
+                finalScore.textContent = this.score;
+                document.getElementById('finalTitle').textContent = 
+                    this.score >= 8 ? '🎉 JUARA KELAS! 🎉' : 
+                    this.score >= 5 ? '👍 BAGUS SEKALI! 👍' : '💪 LAGI YUK! 💪';
+                
+                this.audio.playGameOver();
+            }
+
+            restart() {
+                this.score = 0;
+                this.currentQuestion = 0;
+                this.lives = 3;
+                document.getElementById('questionBox').style.display = 'block';
+                document.getElementById('gameOver').style.display = 'none';
+                this.renderQuestion();
+            }
+
+            createBackgroundAnim() {
+                const bgAnim = document.getElementById('bgAnim');
+                for (let i = 0; i < 20; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.innerHTML = '✨';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.animationDelay = Math.random() * 2 + 's';
+                    bgAnim.appendChild(star);
+                }
+                
+                for (let i = 0; i < 5; i++) {
+                    const cloud = document.createElement('div');
+                    cloud.className = 'cloud';
+                    cloud.innerHTML = '☁️';
+                    cloud.style.left = Math.random() * 100 + '%';
+                    cloud.style.top = Math.random() * 50 + '%';
+                    cloud.style.animationDelay = Math.random() * 10 + 's';
+                    bgAnim.appendChild(cloud);
+                }
+            }
+        }
+
+        // Class AudioManager - Sound Efek Unik
+        class AudioManager {
+            constructor() {
+                this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            playBackground() {
+                this.playTone(440, 0.1, 0, 20, 0.3);
+                setInterval(() => {
+                    this.playMelody();
+                }, 3000);
+            }
+
+            playMelody() {
+                const notes = [392, 440, 494, 523]; // G4 A4 B4 C5
+                notes.forEach((note, i) => {
+                    setTimeout(() => this.playTone(note, 0.2, 0.1, 1, 0.2), i * 300);
+                });
+            }
+
+            playCorrect() {
+                this.playTone(523, 0.3, 0, 1.5, 0.5); // C5
+                this.playTone(659, 0.3, 0.2, 1.5, 0.5); // E5
+            }
+
+            playWrong() {
+                this.playTone(392, 0.4, 0, 0.8, 0.3); // G4 shake
+                this.playTone(349, 0.4, 0.2, 0.8, 0.3); // F4
+            }
+
+            playGameOver() {
+                this.playTone(523, 0.5, 0, 2, 0.4);
+                this.playTone(659, 0.5, 0.5, 2, 0.4);
+                this.playTone(784, 0.5, 1, 2, 0.4);
+            }
+
+            playTone(frequency, duration, delay, type=0, volume=0.3) {
+                const oscillator = this.audioCtx.createOscillator();
+                const gainNode = this.audioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioCtx.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = type === 0 ? 'sine' : 'square';
+                
+                gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime + delay);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + delay + duration);
+                
+                oscillator.start(this.audioCtx.currentTime + delay);
+                oscillator.stop(this.audioCtx.currentTime + delay + duration);
+            }
+        }
+
+        // Inisialisasi Game
+        const game = new Game();
+    </script>
+</body>
+</html>
