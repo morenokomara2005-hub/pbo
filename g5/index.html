@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐛 GAME CACING LUCU BANGET 🐛 - PBO</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(45deg, #a8e6cf, #ffd93d, #ff6b6b, #4ecdc4);
+            background-size: 400% 400%;
+            min-height: 100vh;
+            overflow: hidden;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Latar belakang rumput & bunga */
+        .game-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120,200,100,0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(200,150,100,0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(100,200,150,0.2) 0%, transparent 50%);
+        }
+
+        .grass {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to top, #4a7c59, #90c695);
+        }
+
+        .flower {
+            position: absolute;
+            font-size: 25px;
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            z-index: 20;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .score {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .game-canvas {
+            border: 8px solid #4a7c59;
+            border-radius: 20px;
+            background: linear-gradient(45deg, #90c695, #a8e6cf);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* Kontrol Mobile */
+        .controls {
+            display: grid;
+            grid-template-areas: 
+                ". up ."
+                "left down right";
+            gap: 15px;
+            margin-top: 20px;
+            width: 200px;
+        }
+
+        .control-btn {
+            width: 70px;
+            height: 70px;
+            border: none;
+            border-radius: 50%;
+            font-size: 2em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        #up { grid-area: up; background: linear-gradient(180deg, #4facfe, #00f2fe); color: white; }
+        #left { grid-area: left; background: linear-gradient(90deg, #43e97b, #38f9d7); color: white; }
+        #down { grid-area: down; background: linear-gradient(180deg, #fa709a, #fee140); color: white; }
+        #right { grid-area: right; background: linear-gradient(90deg, #f093fb, #f5576c); color: white; }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 100;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            color: #333;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .controls { width: 250px; }
+            .control-btn { width: 80px; height: 80px; font-size: 2.2em; }
+            h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Latar Belakang -->
+    <div class="game-bg">
+        <div class="grass"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🐛 CACING LUCU 🐛</h1>
+            <div class="score" id="score">Makanan: <span id="foodCount">0</span> 🍎</div>
+        </div>
+
+        <canvas id="gameCanvas" class="game-canvas" width="500" height="500"></canvas>
+
+        <!-- Kontrol Mobile -->
+        <div class="controls">
+            <button id="up" class="control-btn">↑</button>
+            <button id="left" class="control-btn">←</button>
+            <button id="down" class="control-btn">↓</button>
+            <button id="right" class="control-btn">→</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div class="game-over" id="gameOver">
+            <h2 id="gameOverTitle">Game Over! 😢</h2>
+            <p>Skor Final: <span id="finalScore">0</span> 🍎</p>
+            <button class="restart-btn" onclick="game.restart()">🔄 MAIN LAGI</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== KONSEP PBO - PEMROGRAMAN BERORIENTASI OBJEK ==========
+        
+        // Class Snake (Cacing Utama)
+        class Snake {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.gridSize = 20;
+                this.tileCount = canvas.width / this.gridSize;
+                this.body = [
+                    {x: 10, y: 10}
+                ];
+                this.dx = 0;
+                this.dy = 0;
+                this.newHead = {x: 0, y: 0};
+            }
+
+            update() {
+                this.newHead = { 
+                    x: this.body[0].x + this.dx, 
+                    y: this.body[0].y + this.dy 
+                };
+                
+                // Cek tabrakan dinding
+                if (this.newHead.x < 0 || this.newHead.x >= this.tileCount || 
+                    this.newHead.y < 0 || this.newHead.y >= this.tileCount) {
+                    game.gameOver();
+                    return;
+                }
+
+                // Cek tabrakan badan sendiri
+                for (let segment of this.body) {
+                    if (this.newHead.x === segment.x && this.newHead.y === segment.y) {
+                        game.gameOver();
+                        return;
+                    }
+                }
+
+                this.body.unshift(this.newHead);
+                
+                // Jika makan makanan, jangan potong ekor
+                if (this.newHead.x === game.food.x && this.newHead.y === game.food.y) {
+                    game.foodCount++;
+                    game.audio.playEat();
+                    game.generateFood();
+                } else {
+                    this.body.pop();
+                }
+            }
+
+            draw() {
+                this.ctx.fillStyle = '#4a7c59';
+                for (let i = 0; i < this.body.length; i++) {
+                    const segment = this.body[i];
+                    const gradient = this.ctx.createRadialGradient(
+                        segment.x * this.gridSize + 10, 
+                        segment.y * this.gridSize + 10, 2,
+                        segment.x * this.gridSize + 10, 
+                        segment.y * this.gridSize + 10, 10
+                    );
+                    
+                    // Warna gradasi cacing lucu
+                    if (i === 0) { // Kepala
+                        gradient.addColorStop(0, '#ff6b6b');
+                        gradient.addColorStop(1, '#ff9a9e');
+                    } else {
+                        gradient.addColorStop(0, '#90c695');
+                        gradient.addColorStop(1, '#4a7c59');
+                    }
+                    
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.fillRect(
+                        segment.x * this.gridSize + 2, 
+                        segment.y * this.gridSize + 2, 
+                        this.gridSize - 4, 
+                        this.gridSize - 4
+                    );
+
+                    // Mata lucu di kepala
+                    if (i === 0) {
+                        this.drawEyes();
+                    }
+                }
+            }
+
+            drawEyes() {
+                const head = this.body[0];
+                this.ctx.fillStyle = 'white';
+                this.ctx.beginPath();
+                this.ctx.arc(head.x * this.gridSize + 8, head.y * this.gridSize + 6, 4, 0, Math.PI * 2);
+                this.ctx.arc(head.x * this.gridSize + 12, head.y * this.gridSize + 6, 4, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                this.ctx.fillStyle = '#333';
+                this.ctx.beginPath();
+                this.ctx.arc(head.x * this.gridSize + 7, head.y * this.gridSize + 5, 2, 0, Math.PI * 2);
+                this.ctx.arc(head.x * this.gridSize + 11, head.y * this.gridSize + 5, 2, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+
+            changeDirection(dx, dy) {
+                if (dx !== -this.dx || dy !== -this.dy) {
+                    this.dx = dx;
+                    this.dy = dy;
+                }
+            }
+        }
+
+        // Class Food (Makanan)
+        class Food {
+            constructor() {
+                this.x = 0;
+                this.y = 0;
+            }
+
+            generate() {
+                this.x = Math.floor(Math.random() * 25);
+                this.y = Math.floor(Math.random() * 25);
+            }
+
+            draw(ctx, gridSize) {
+                const gradient = ctx.createRadialGradient(
+                    this.x * gridSize + 10, 
+                    this.y * gridSize + 10, 0,
+                    this.x * gridSize + 10, 
+                    this.y * gridSize + 10, 12
+                );
+                gradient.addColorStop(0, '#ff4757');
+                gradient.addColorStop(0.7, '#ff6b7a');
+                gradient.addColorStop(1, '#ffa8a8');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x * gridSize + 10, this.y * gridSize + 10, 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Bayangan lucu
+                ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                ctx.beginPath();
+                ctx.arc(this.x * gridSize + 12, this.y * gridSize + 12, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Class AudioManager (Soundtrack)
+        class AudioManager {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            playEat() {
+                this.playMelody([523, 659, 784], 0.1); // C5 E5 G5
+            }
+
+            playGameOver() {
+                this.playMelody([392, 349, 294], 0.3); // G4 F4 D4
+            }
+
+            playMove() {
+                this.playTone(440, 0.05, 0, 0, 0.1); // A4
+            }
+
+            playBackground() {
+                setInterval(() => {
+                    this.playMelody([392, 440, 494, 523], 0.15);
+                }, 2000);
+            }
+
+            playTone(freq, duration, delay, type=0, vol=0.3, wave='sine') {
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.frequency.value = freq;
+                    osc.type = wave;
+                    
+                    gain.gain.setValueAtTime(vol, this.ctx.currentTime + delay);
+                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + delay + duration);
+                    
+                    osc.start(this.ctx.currentTime + delay);
+                    osc.stop(this.ctx.currentTime + delay + duration);
+                } catch(e) {}
+            }
+
+            playMelody(notes, duration) {
+                notes.forEach((note, i) => {
+                    setTimeout(() => this.playTone(note, duration, 0, 0, 0.4), i * 150);
+                });
+            }
+        }
+
+        // Class Game Utama
+        class Game {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.snake = new Snake(this.canvas);
+                this.food = new Food();
+                this.foodCount = 0;
+                this.audio = new AudioManager();
+                this.gameRunning = true;
+                this.init();
+            }
+
+            init() {
+                this.food.generate();
+                this.bindControls();
+                this.gameLoop();
+                this.audio.playBackground();
+            }
+
+            bindControls() {
+                // Keyboard
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowUp': this.snake.changeDirection(0, -1); break;
+                        case 'ArrowDown': this.snake.changeDirection(0, 1); break;
+                        case 'ArrowLeft': this.snake.changeDirection(-1, 0); break;
+                        case 'ArrowRight': this.snake.changeDirection(1, 0); break;
+                    }
+                });
+
+                // Mobile Buttons
+                document.getElementById('up').onclick = () => this.snake.changeDirection(0, -1);
+                document.getElementById('down').onclick = () => this.snake.changeDirection(0, 1);
+                document.getElementById('left').onclick = () => this.snake.changeDirection(-1, 0);
+                document.getElementById('right').onclick = () => this.snake.changeDirection(1, 0);
+            }
+
+            gameLoop() {
+                if (!this.gameRunning) return;
+
+                this.ctx = this.canvas.getContext('2d');
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Gambar grid rumput
+                this.drawGrid();
+
+                this.snake.update();
+                this.snake.draw();
+                this.food.draw(this.ctx, this.snake.gridSize);
+
+                this.updateUI();
+                setTimeout(() => this.gameLoop(), 150);
+            }
+
+            drawGrid() {
+                this.ctx.strokeStyle = 'rgba(74, 124, 89, 0.1)';
+                this.ctx.lineWidth = 1;
+                for (let i = 0; i < this.snake.tileCount; i++) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(i * this.snake.gridSize, 0);
+                    this.ctx.lineTo(i * this.snake.gridSize, this.canvas.height);
+                    this.ctx.stroke();
+
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, i * this.snake.gridSize);
+                    this.ctx.lineTo(this.canvas.width, i * this.snake.gridSize);
+                    this.ctx.stroke();
+                }
+            }
+
+            generateFood() {
+                this.food.generate();
+            }
+
+            updateUI() {
+                document.getElementById('foodCount').textContent = this.foodCount;
+            }
+
+            gameOver() {
+                this.gameRunning = false;
+                this.audio.playGameOver();
+                document.getElementById('finalScore').textContent = this.foodCount;
+                document.getElementById('gameOver').style.display = 'block';
+            }
+
+            restart() {
+                this.gameRunning = true;
+                this.snake = new Snake(this.canvas);
+                this.foodCount = 0;
+                this.food.generate();
+                document.getElementById('gameOver').style.display = 'none';
+                this.gameLoop();
+            }
+        }
+
+        // Mulai Game
+        const game = new Game();
+
+        // Tambah bunga latar belakang
+        function createFlowers() {
+            const flowers = ['🌸', '🌺', '🌻', '🌼'];
+            for (let i = 0; i < 15; i++) {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+                flower.style.left = Math.random() * 100 + '%';
+                flower.style.bottom = Math.random() * 150 + 'px';
+                flower.style.animationDelay = Math.random() * 3 + 's';
+                document.querySelector('.game-bg').appendChild(flower);
+            }
+        }
+
+        createFlowers();
+    </script>
+</body>
+</html>
