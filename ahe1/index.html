@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Belajar Anak TK - AHE Hegarmukti</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef, #fecfef, #fad0c4, #ffd1ff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Animasi bintang */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ffd700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: twinkle 2s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+            50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5em;
+            color: #ff6b6b;
+            text-shadow: 3px 3px 0px #fff, 5px 5px 0px #ff9a9e;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .score {
+            font-size: 1.5em;
+            color: #4ecdc4;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: all 0.3s ease;
+        }
+
+        .question-container:hover {
+            transform: perspective(1000px) rotateX(0deg) scale(1.02);
+        }
+
+        .question {
+            font-size: 1.8em;
+            color: #ff8e53;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.3em;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-family: 'Comic Neue', cursive;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .option:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .option:active {
+            transform: scale(0.95);
+        }
+
+        .option.correct {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            animation: correctAnim 0.6s ease;
+        }
+
+        .option.wrong {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            animation: wrongAnim 0.6s ease;
+        }
+
+        @keyframes correctAnim {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wrongAnim {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        .next-btn, .start-btn {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            font-family: 'Comic Neue', cursive;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover, .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .feedback {
+            font-size: 1.5em;
+            margin: 20px 0;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .correct-feedback { color: #56ab2f; }
+        .wrong-feedback { color: #ff416c; }
+
+        .hidden { display: none; }
+
+        /* Audio controls */
+        .audio-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .audio-btn {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Backsound anak-anak (audio bebas royalti) -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+        <!-- Fallback: bisa diganti dengan file lokal anak-anak nyanyian -->
+    </audio>
+    
+    <!-- Kontrol audio -->
+    <div class="audio-controls">
+        <button class="audio-btn" onclick="toggleMusic()" id="musicBtn">🎵</button>
+    </div>
+
+    <!-- Animasi bintang -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <!-- Halaman awal -->
+        <div id="startPage">
+            <h1>🎉 SELAMAT DATANG! 🎉</h1>
+            <p style="font-size: 1.5em; color: #666; margin-bottom: 30px;">
+                Yuk belajar sambil main bareng teman-teman AHE Hegarmukti! 
+            </p>
+            <button class="start-btn" onclick="startGame()">🚀 MULAI BERMAIN 🚀</button>
+        </div>
+
+        <!-- Halaman game -->
+        <div id="gamePage" class="hidden">
+            <div class="score">⭐ Skor: <span id="score">0</span>/5 ⭐</div>
+            <h1>📚 KUIS CERDAS 📚</h1>
+            
+            <div class="question-container">
+                <div class="question" id="question"></div>
+                <div class="options" id="options"></div>
+                <div class="feedback" id="feedback"></div>
+                <button class="next-btn hidden" id="nextBtn" onclick="nextQuestion()">➡️ SOAL SELANJUTNYA ➡️</button>
+            </div>
+        </div>
+
+        <!-- Halaman akhir -->
+        <div id="endPage" class="hidden">
+            <h1 id="finalScoreTitle">🎊 KAMU HEBAT! 🎊</h1>
+            <div class="score" style="font-size: 2em;" id="finalScore"></div>
+            <button class="start-btn" onclick="restartGame()" style="font-size: 1.3em;">🔄 MAIN LAGI</button>
+        </div>
+    </div>
+
+    <script>
+        // Data pertanyaan
+        const questions = [
+            {
+                question: "1. Berapa hasil 4 + 5 = ?",
+                options: ["A. 7", "B. 5", "C. 9", "D. 2"],
+                correct: 2
+            },
+            {
+                question: "2. Siapa nama guru yang mengajar di AHE Hegarmukti?",
+                options: ["A. Bu Aul dan Bu Furry", "B. Bu Intan dan Bu Ani", "C. Bu Ferra dan Bu Rally", "D. Bu Ani dan Bu Silvy"],
+                correct: 3
+            },
+            {
+                question: "3. Berapa hasil dari 8 + 2 = ?",
+                options: ["A. 2", "B. 5", "C. 10", "D. 3"],
+                correct: 2
+            },
+            {
+                question: "4. Mana yang termasuk ke dalam bentuk lingkaran?",
+                options: ["A. Bola", "B. Kursi", "C. Meja", "D. Pensil"],
+                correct: 0
+            },
+            {
+                question: "5. Berapa hasil dari 10 - 5 ?",
+                options: ["A. 3", "B. 5", "C. 2", "D. 7"],
+                correct: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let gameStarted = false;
+
+        const bgMusic = document.getElementById('bgMusic');
+        let musicPlaying = false;
+
+        // Inisialisasi bintang
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 20; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Toggle musik
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicPlaying = false;
+                document.getElementById('musicBtn').textContent = '🔇';
+            } else {
+                bgMusic.play().catch(e => console.log('Audio tidak tersedia'));
+                musicPlaying = true;
+                document.getElementById('musicBtn').textContent = '🎵';
+            }
+        }
+
+        // Mulai game
+        function startGame() {
+            document.getElementById('startPage').classList.add('hidden');
+            document.getElementById('gamePage').classList.remove('hidden');
+            currentQuestion = 0;
+            score = 0;
+            gameStarted = true;
+            showQuestion();
+            if (musicPlaying) bgMusic.play();
+            createStars();
+        }
+
+        // Tampilkan pertanyaan
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question').textContent = q.question;
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.textContent = option;
+                btn.onclick = () => selectOption(index);
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('nextBtn').classList.add('hidden');
+        }
+
+        // Pilih jawaban
+        function selectOption(selected) {
+            const options = document.querySelectorAll('.option');
+            const correct = questions[currentQuestion].correct;
+            
+            options.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === correct) {
+                    btn.classList.add('correct');
+                } else if (index === selected && index !== correct) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
+            if (selected === correct) {
+                score++;
+                feedback.textContent = '🎉 BENAR SEKALI! 🎉';
+                feedback.className = 'feedback correct-feedback';
+                document.getElementById('score').textContent = score;
+            } else {
+                feedback.textContent = `✨ Jawaban benar: ${questions[currentQuestion].options[correct]} ✨`;
+                feedback.className = 'feedback wrong-feedback';
+            }
+
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        // Soal berikutnya
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        // Akhiri game
+        function endGame() {
+            document.getElementById('gamePage').classList.add('hidden');
+            document.getElementById('endPage').classList.remove('hidden');
+            
+            const finalScore = document.getElementById('finalScore');
+            const finalTitle = document.getElementById('finalScoreTitle');
+            
+            if (score === 5) {
+                finalTitle.textContent = '🏆 JUARA KELAS! 🏆';
+                finalScore.innerHTML = `⭐ ${score}/5 ⭐<br><br>SEMUA BENAR!`;
+            } else if (score >= 3) {
+                finalTitle.textContent = '🎊 KERJA BAGUS! 🎊';
+                finalScore.innerHTML = `⭐ ${score}/5 ⭐<br><br>Kamu pintar!`;
+            } else {
+                finalTitle.textContent = '🌟 MASIH BELUM PERFEK 🌟';
+                finalScore.innerHTML = `⭐ ${score}/5 ⭐<br><br>Yuk coba lagi!`;
+            }
+        }
+
+        // Main ulang
+        function restartGame() {
+            document.getElementById('endPage').classList.add('hidden');
+            document.getElementById('startPage').classList.remove('hidden');
+            document.getElementById('stars').innerHTML = '';
+        }
+
+        // Event listeners
+        window.onload = function() {
+            // Coba putar musik otomatis (dengan fallback)
+            document.addEventListener('click', function() {
+                if (!musicPlaying) {
+                    toggleMusic();
+                }
+            }, { once: true });
+        };
+    </script>
+</body>
+</html>
