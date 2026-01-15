@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Login OOP - Exclusive Design</title>
+    <style>
+        /* CSS & BACKGROUND DESIGN */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            --login-btn: #27ae60;
+            --logout-btn: #e67e22;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Latar Belakang Unik: Animated Mesh Gradient */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .hidden { display: none; }
+
+        h2 { color: #2c3e50; margin-bottom: 1.5rem; }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: #2a5298; outline: none; }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            transition: transform 0.2s, filter 0.2s;
+        }
+
+        button:active { transform: scale(0.97); }
+
+        .btn-login { background-color: var(--login-btn); }
+        .btn-logout { background-color: var(--logout-btn); margin-top: 20px; }
+
+        .welcome-msg { font-size: 1.2rem; color: #34495e; }
+        .username-text { color: #2980b9; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="login-form" class="container">
+        <h2>Selamat Datang</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button class="btn-login" onclick="app.handleLogin()">LOGIN</button>
+    </div>
+
+    <div id="profile-page" class="container hidden">
+        <h2>Halaman Profil</h2>
+        <div class="welcome-msg">
+            Hai, <span id="display-username" class="username-text"></span>
+        </div>
+        <p>Anda berhasil login ke sistem menggunakan konsep OOP.</p>
+        <button class="btn-logout" onclick="app.handleLogout()">LOGOUT</button>
+    </div>
+
+    <script>
+        /**
+         * CLASS: AuthManager
+         * Bertanggung jawab atas logika data dan sesi (OOP Core)
+         */
+        class AuthManager {
+            constructor() {
+                // Inisialisasi Database User sesuai permintaan
+                this.dbUsers = [
+                    { username: "moreno", password: "123", role: "user" },
+                    { username: "admin", password: "admin", role: "admin" },
+                    { username: "guest", password: "guest", role: "guest" }
+                ];
+                this.initDB();
+            }
+
+            // Simulasi File I/O dengan LocalStorage
+            initDB() {
+                if (!localStorage.getItem('user_db')) {
+                    localStorage.setItem('user_db', JSON.stringify(this.dbUsers));
+                }
+            }
+
+            // Method untuk memvalidasi user
+            validate(username, password) {
+                const users = JSON.parse(localStorage.getItem('user_db'));
+                return users.find(u => u.username === username && u.password === password);
+            }
+
+            // Method untuk menyimpan sesi login
+            setSession(user) {
+                localStorage.setItem('active_session', JSON.stringify(user));
+            }
+
+            // Method untuk menghapus sesi
+            clearSession() {
+                localStorage.removeItem('active_session');
+            }
+
+            // Method untuk cek sesi aktif
+            getSession() {
+                return JSON.parse(localStorage.getItem('active_session'));
+            }
+        }
+
+        /**
+         * CLASS: UserInterface
+         * Bertanggung jawab atas interaksi UI dan DOM
+         */
+        class UserInterface {
+            constructor(auth) {
+                this.auth = auth;
+                this.init();
+            }
+
+            init() {
+                this.updateDisplay();
+            }
+
+            handleLogin() {
+                const userInp = document.getElementById('username').value;
+                const passInp = document.getElementById('password').value;
+
+                const user = this.auth.validate(userInp, passInp);
+
+                if (user) {
+                    this.auth.setSession(user);
+                    this.updateDisplay();
+                    this.clearFields();
+                } else {
+                    alert("Gagal Login! Username atau password salah.");
+                }
+            }
+
+            handleLogout() {
+                this.auth.clearSession();
+                this.updateDisplay();
+            }
+
+            updateDisplay() {
+                const session = this.auth.getSession();
+                const loginForm = document.getElementById('login-form');
+                const profilePage = document.getElementById('profile-page');
+                const displayName = document.getElementById('display-username');
+
+                if (session) {
+                    loginForm.classList.add('hidden');
+                    profilePage.classList.remove('hidden');
+                    displayName.innerText = session.username;
+                } else {
+                    loginForm.classList.remove('hidden');
+                    profilePage.classList.add('hidden');
+                }
+            }
+
+            clearFields() {
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        // INSTANSIASI OBJECT
+        const myAuth = new AuthManager();
+        const app = new UserInterface(myAuth);
+
+    </script>
+</body>
+</html>
