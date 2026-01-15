@@ -3,206 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Login OOP - Exclusive Design</title>
+    <title>City Authentic - Login OOP</title>
     <style>
-        /* CSS & BACKGROUND DESIGN */
+        /* --- CSS & UI/UX DESIGN --- */
         :root {
-            --primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            --login-btn: #27ae60;
-            --logout-btn: #e67e22;
-            --card-bg: rgba(255, 255, 255, 0.9);
+            --primary-city: #2c3e50;
+            --accent-city: #34495e;
+            --success-btn: #27ae60;
+            --danger-btn: #e67e22; /* Oranye sesuai permintaan */
+            --glass-bg: rgba(255, 255, 255, 0.15);
         }
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
+        body, html {
+            height: 100%;
             margin: 0;
-            height: 100vh;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Latar Belakang Unik: Animated Mesh Gradient */
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            /* Latar belakang perkotaan yang unik menggunakan gradien dan siluet */
+            background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background-attachment: fixed;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Dekorasi Siluet Perkotaan Sederhana */
+        body::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: 
+                linear-gradient(transparent 70%, #000 100%),
+                url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+            opacity: 0.3;
+            z-index: -1;
         }
 
         .container {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 380px;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 350px;
             text-align: center;
-            backdrop-filter: blur(10px);
+            z-index: 10;
         }
 
+        h2 { color: var(--primary-city); margin-bottom: 20px; }
         .hidden { display: none; }
 
-        h2 { color: #2c3e50; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 15px; }
 
         input {
             width: 100%;
-            padding: 12px 15px;
-            margin: 10px 0;
+            padding: 12px;
             border: 2px solid #ddd;
-            border-radius: 10px;
+            border-radius: 8px;
             box-sizing: border-box;
-            transition: 0.3s;
+            font-size: 14px;
+            transition: border-color 0.3s;
         }
 
-        input:focus { border-color: #2a5298; outline: none; }
+        input:focus {
+            border-color: var(--primary-city);
+            outline: none;
+        }
 
-        button {
+        .btn {
             width: 100%;
             padding: 12px;
             border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            border-radius: 8px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
             color: white;
-            transition: transform 0.2s, filter 0.2s;
         }
 
-        button:active { transform: scale(0.97); }
+        .btn-login { background-color: var(--success-btn); }
+        .btn-login:hover { background-color: #219150; transform: translateY(-2px); }
 
-        .btn-login { background-color: var(--login-btn); }
-        .btn-logout { background-color: var(--logout-btn); margin-top: 20px; }
+        .btn-logout { background-color: var(--danger-btn); margin-top: 20px; }
+        .btn-logout:hover { background-color: #d35400; transform: translateY(-2px); }
 
-        .welcome-msg { font-size: 1.2rem; color: #34495e; }
-        .username-text { color: #2980b9; font-weight: bold; }
+        .welcome-text {
+            font-size: 20px;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .user-highlight {
+            color: var(--primary-city);
+            font-weight: bold;
+            text-transform: capitalize;
+        }
     </style>
 </head>
 <body>
 
-    <div id="login-form" class="container">
-        <h2>Selamat Datang</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn-login" onclick="app.handleLogin()">LOGIN</button>
+    <div id="login-view" class="container">
+        <h2>City Login</h2>
+        <div class="form-group">
+            <input type="text" id="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" placeholder="Password">
+        </div>
+        <button class="btn btn-login" onclick="app.actionLogin()">MASUK</button>
     </div>
 
-    <div id="profile-page" class="container hidden">
-        <h2>Halaman Profil</h2>
-        <div class="welcome-msg">
-            Hai, <span id="display-username" class="username-text"></span>
-        </div>
-        <p>Anda berhasil login ke sistem menggunakan konsep OOP.</p>
-        <button class="btn-logout" onclick="app.handleLogout()">LOGOUT</button>
+    <div id="profile-view" class="container hidden">
+        <h2>Dashboard</h2>
+        <div class="welcome-text">Hai, <span id="user-info" class="user-highlight"></span>!</div>
+        <p>Selamat datang di sistem manajemen kota.</p>
+        <button class="btn btn-logout" onclick="app.actionLogout()">KELUAR</button>
     </div>
 
     <script>
         /**
-         * CLASS: AuthManager
-         * Bertanggung jawab atas logika data dan sesi (OOP Core)
+         * CLASS: AuthManager (Model & Controller)
+         * Mengimplementasikan OOP untuk manajemen autentikasi
          */
         class AuthManager {
             constructor() {
-                // Inisialisasi Database User sesuai permintaan
-                this.dbUsers = [
+                // Database Statis awal (JSON)
+                this.defaultUsers = [
                     { username: "moreno", password: "123", role: "user" },
                     { username: "admin", password: "admin", role: "admin" },
                     { username: "guest", password: "guest", role: "guest" }
                 ];
+
+                // Inisialisasi Database ke LocalStorage jika belum ada
                 this.initDB();
+                // Jalankan render awal untuk cek session
+                this.render();
             }
 
-            // Simulasi File I/O dengan LocalStorage
+            // Method: Menyimpan data user awal ke LocalStorage (Simulasi I/O)
             initDB() {
                 if (!localStorage.getItem('user_db')) {
-                    localStorage.setItem('user_db', JSON.stringify(this.dbUsers));
+                    localStorage.setItem('user_db', JSON.stringify(this.defaultUsers));
                 }
             }
 
-            // Method untuk memvalidasi user
-            validate(username, password) {
-                const users = JSON.parse(localStorage.getItem('user_db'));
-                return users.find(u => u.username === username && u.password === password);
+            // Method: Proses Verifikasi Login
+            validateLogin(inputUser, inputPass) {
+                const db = JSON.parse(localStorage.getItem('user_db'));
+                const userMatch = db.find(u => u.username === inputUser && u.password === inputPass);
+
+                if (userMatch) {
+                    // Simpan status login (Session)
+                    localStorage.setItem('session_active', JSON.stringify(userMatch));
+                    return true;
+                }
+                return false;
             }
 
-            // Method untuk menyimpan sesi login
-            setSession(user) {
-                localStorage.setItem('active_session', JSON.stringify(user));
-            }
-
-            // Method untuk menghapus sesi
+            // Method: Proses Logout
             clearSession() {
-                localStorage.removeItem('active_session');
+                localStorage.removeItem('session_active');
+                this.render();
             }
 
-            // Method untuk cek sesi aktif
-            getSession() {
-                return JSON.parse(localStorage.getItem('active_session'));
-            }
-        }
-
-        /**
-         * CLASS: UserInterface
-         * Bertanggung jawab atas interaksi UI dan DOM
-         */
-        class UserInterface {
-            constructor(auth) {
-                this.auth = auth;
-                this.init();
-            }
-
-            init() {
-                this.updateDisplay();
-            }
-
-            handleLogin() {
-                const userInp = document.getElementById('username').value;
-                const passInp = document.getElementById('password').value;
-
-                const user = this.auth.validate(userInp, passInp);
-
-                if (user) {
-                    this.auth.setSession(user);
-                    this.updateDisplay();
-                    this.clearFields();
-                } else {
-                    alert("Gagal Login! Username atau password salah.");
-                }
-            }
-
-            handleLogout() {
-                this.auth.clearSession();
-                this.updateDisplay();
-            }
-
-            updateDisplay() {
-                const session = this.auth.getSession();
-                const loginForm = document.getElementById('login-form');
-                const profilePage = document.getElementById('profile-page');
-                const displayName = document.getElementById('display-username');
+            // Method: Update UI berdasarkan state (View Controller)
+            render() {
+                const session = localStorage.getItem('session_active');
+                const loginView = document.getElementById('login-view');
+                const profileView = document.getElementById('profile-view');
+                const infoText = document.getElementById('user-info');
 
                 if (session) {
-                    loginForm.classList.add('hidden');
-                    profilePage.classList.remove('hidden');
-                    displayName.innerText = session.username;
+                    const currentUser = JSON.parse(session);
+                    loginView.classList.add('hidden');
+                    profileView.classList.remove('hidden');
+                    infoText.innerText = currentUser.username;
                 } else {
-                    loginForm.classList.remove('hidden');
-                    profilePage.classList.add('hidden');
+                    loginView.classList.remove('hidden');
+                    profileView.classList.add('hidden');
                 }
             }
 
-            clearFields() {
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
+            // Method untuk menangani event klik Login
+            actionLogin() {
+                const u = document.getElementById('username').value;
+                const p = document.getElementById('password').value;
+
+                if (this.validateLogin(u, p)) {
+                    this.render();
+                } else {
+                    alert("Gagal login! Username atau password tidak sesuai.");
+                }
+            }
+
+            // Method untuk menangani event klik Logout
+            actionLogout() {
+                this.clearSession();
             }
         }
 
-        // INSTANSIASI OBJECT
-        const myAuth = new AuthManager();
-        const app = new UserInterface(myAuth);
-
+        // INSTANSIASI OBJECT (Entry Point)
+        const app = new AuthManager();
     </script>
 </body>
 </html>
