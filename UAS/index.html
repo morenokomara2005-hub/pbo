@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Login OOP - LocalStorage</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --bg-color: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .hidden { display: none; }
+
+        h2 { color: #333; margin-bottom: 1.5rem; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        .btn-login { background-color: var(--success-color); color: white; }
+        .btn-logout { background-color: var(--danger-color); color: white; margin-top: 20px; }
+        button:hover { opacity: 0.9; }
+
+        .profile-card { padding: 20px; border: 1px solid #eee; border-radius: 8px; }
+        .user-info { font-size: 1.2rem; color: var(--primary-color); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="login-section" class="container">
+        <h2>Login Member</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button class="btn-login" onclick="app.handleLogin()">MASUK</button>
+    </div>
+
+    <div id="profile-section" class="container hidden">
+        <div class="profile-card">
+            <h2>Halaman Profil</h2>
+            <p>Hai, <span id="display-user" class="user-info"></span>!</p>
+            <p>Anda berhasil masuk ke sistem.</p>
+            <button class="btn-logout" onclick="app.handleLogout()">LOGOUT</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Definisikan Class UserManagement (Konsep OOP)
+        class AuthSystem {
+            constructor() {
+                // Inisialisasi Database User (JSON)
+                this.users = [
+                    { username: "moreno", password: "123", role: "user" },
+                    { username: "admin", password: "admin", role: "admin" },
+                    { username: "guest", password: "guest", role: "guest" }
+                ];
+                
+                // Cek status login saat aplikasi dimuat
+                this.checkSession();
+            }
+
+            // Method untuk validasi login
+            login(username, password) {
+                const user = this.users.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    // Simpan ke LocalStorage (File I/O Simulation)
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("currentUser", JSON.stringify(user));
+                    return true;
+                }
+                return false;
+            }
+
+            // Method untuk logout
+            logout() {
+                localStorage.removeItem("isLoggedIn");
+                localStorage.removeItem("currentUser");
+                this.updateUI();
+            }
+
+            // Method untuk mengecek sesi aktif
+            checkSession() {
+                this.updateUI();
+            }
+
+            // Method untuk manipulasi DOM/Antarmuka
+            updateUI() {
+                const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+                const loginSection = document.getElementById('login-section');
+                const profileSection = document.getElementById('profile-section');
+                const displayUser = document.getElementById('display-user');
+
+                if (isLoggedIn) {
+                    const userData = JSON.parse(localStorage.getItem("currentUser"));
+                    loginSection.classList.add('hidden');
+                    profileSection.classList.remove('hidden');
+                    displayUser.innerText = userData.username;
+                } else {
+                    loginSection.classList.remove('hidden');
+                    profileSection.classList.add('hidden');
+                }
+            }
+        }
+
+        // 2. Definisikan Class AppController untuk menangani aksi user
+        class AppController {
+            constructor(authInstance) {
+                this.auth = authInstance;
+            }
+
+            handleLogin() {
+                const userVal = document.getElementById('username').value;
+                const passVal = document.getElementById('password').value;
+
+                if (this.auth.login(userVal, passVal)) {
+                    this.auth.updateUI();
+                    // Reset field
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                } else {
+                    alert("Gagal login! Username atau password salah.");
+                }
+            }
+
+            handleLogout() {
+                if (confirm("Apakah anda yakin ingin keluar?")) {
+                    this.auth.logout();
+                }
+            }
+        }
+
+        // 3. Inisialisasi Object
+        const myAuth = new AuthSystem();
+        const app = new AppController(myAuth);
+
+    </script>
+</body>
+</html>
