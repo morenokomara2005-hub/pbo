@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Login OOP - Pemandangan Indah</title>
+    <style>
+        /* --- CSS & UI/UX DESIGN --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Latar belakang pemandangan alam yang indah */
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 380px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .hidden { display: none; }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        /* Warna Positif untuk Login (Biru/Hijau) */
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-login:hover { background-color: #27ae60; }
+
+        /* Warna Berbeda untuk Logout (Merah) */
+        .btn-logout {
+            width: 100%;
+            padding: 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn-logout:hover { background-color: #c0392b; }
+
+        .profile-greeting {
+            font-size: 20px;
+            color: #2c3e50;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-form" class="container">
+        <h2>Selamat Datang</h2>
+        <input type="text" id="username" class="input-box" placeholder="Username">
+        <input type="password" id="password" class="input-box" placeholder="Password">
+        <button class="btn-login" onclick="app.prosesLogin()">LOGIN</button>
+    </div>
+
+    <div id="profile-page" class="container hidden">
+        <h2>Profil Pengguna</h2>
+        <p class="profile-greeting">Hai, <span id="user-display" class="user-name"></span>!</p>
+        <p style="margin-top: 10px; color: #666;">Anda berhasil login ke sistem.</p>
+        <button class="btn-logout" onclick="app.prosesLogout()">LOGOUT</button>
+    </div>
+
+    <script>
+        /**
+         * 1. Class UserSession (Mengelola data user & LocalStorage)
+         */
+        class UserSession {
+            constructor() {
+                // Database user awal dalam bentuk array of objects
+                this.initialUsers = [
+                    { username: "moreno", password: "123" },
+                    { username: "admin", password: "admin" },
+                    { username: "guest", password: "guest" }
+                ];
+                this.setupDatabase();
+            }
+
+            // Inisialisasi database ke LocalStorage (Simulasi File I/O)
+            setupDatabase() {
+                if (!localStorage.getItem('user_db')) {
+                    localStorage.setItem('user_db', JSON.stringify(this.initialUsers));
+                }
+            }
+
+            // Method validasi kredensial
+            validate(user, pass) {
+                const db = JSON.parse(localStorage.getItem('user_db'));
+                return db.find(u => u.username === user && u.password === pass);
+            }
+
+            // Method menyimpan sesi aktif
+            saveActiveSession(userData) {
+                localStorage.setItem('active_session', JSON.stringify(userData));
+            }
+
+            // Method menghapus sesi
+            clearSession() {
+                localStorage.removeItem('active_session');
+            }
+
+            // Method mengambil data sesi saat ini
+            getActiveSession() {
+                return JSON.parse(localStorage.getItem('active_session'));
+            }
+        }
+
+        /**
+         * 2. Class AuthApp (Mengelola Logika Aplikasi & UI)
+         */
+        class AuthApp {
+            constructor() {
+                this.sessionManager = new UserSession();
+                this.init();
+            }
+
+            // Inisialisasi tampilan berdasarkan status login
+            init() {
+                const user = this.sessionManager.getActiveSession();
+                const loginForm = document.getElementById('login-form');
+                const profilePage = document.getElementById('profile-page');
+                const display = document.getElementById('user-display');
+
+                if (user) {
+                    loginForm.classList.add('hidden');
+                    profilePage.classList.remove('hidden');
+                    display.innerText = user.username;
+                } else {
+                    loginForm.classList.remove('hidden');
+                    profilePage.classList.add('hidden');
+                }
+            }
+
+            // Method untuk handle proses login
+            prosesLogin() {
+                const userVal = document.getElementById('username').value;
+                const passVal = document.getElementById('password').value;
+
+                const validUser = this.sessionManager.validate(userVal, passVal);
+
+                if (validUser) {
+                    this.sessionManager.saveActiveSession(validUser);
+                    this.init(); // Refresh UI
+                } else {
+                    alert("Gagal login! Username atau password salah.");
+                }
+            }
+
+            // Method untuk handle proses logout
+            prosesLogout() {
+                this.sessionManager.clearSession();
+                // Reset form input
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                this.init(); // Kembali ke halaman login
+            }
+        }
+
+        /**
+         * 3. Membuat Object dari class AuthApp
+         */
+        const app = new AuthApp();
+
+    </script>
+</body>
+</html>
